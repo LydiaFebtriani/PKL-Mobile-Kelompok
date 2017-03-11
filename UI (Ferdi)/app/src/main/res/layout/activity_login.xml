@@ -1,0 +1,84 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/flogin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.i14059.ui.Login">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="19dp"
+        android:text="User Name"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textViewPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editTextUserName"
+        android:layout_marginTop="17dp"
+        android:text="Password"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textViewPassword"
+        android:ems="10"
+        android:hint="Masukan password!"
+        android:inputType="textPassword"
+        android:text="" />
+
+    <Button
+android:id="@+id/buttonLogin"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignParentLeft="true"
+android:layout_alignRight="@+id/textViewPassword"
+android:layout_below="@+id/editTextPassword"
+android:layout_marginTop="26dp"
+android:text="Login"/>
+
+<Button
+android:id="@+id/buttonRegistrasi"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignBottom="@+id/buttonLogin"
+    android:layout_marginRight="16dp"
+android:text="Register"
+    android:layout_alignTop="@+id/buttonLogin"
+    android:layout_centerHorizontal="true"
+    android:onClick="onButtonRegist"/>
+
+<TextView
+android:id="@+id/textView2"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignParentLeft="true"
+android:layout_alignParentTop="true"
+android:layout_marginTop="19dp"
+android:text="Silakan tekan tombol Login atau Register jika ingin mendaftar!"
+android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/editTextUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Masukan email di sini!"
+        android:inputType="textEmailAddress"
+        android:text=""
+        android:layout_below="@+id/textView1"
+        android:layout_alignParentStart="true">
+
+        <requestFocus/>
+  </EditText>
+
+</RelativeLayout>
