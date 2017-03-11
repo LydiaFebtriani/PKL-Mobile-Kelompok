@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fRekap"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    tools:context="com.example.i14072.pklmobile.RekapActivity">
+
+    <ScrollView
+        android:id="@+id/lTransaksi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp">
+
+        <TableLayout
+            android:id="@+id/tblRekap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/lblNamaProduk"
+                    android:padding="5dp"
+                    android:text="Nama produk"
+                    android:textAlignment="center"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/lblJmlhBeli"
+                    android:padding="5dp"
+                    android:text="Jumlah"
+                    android:textAlignment="center"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/lblHargaJual"
+                    android:padding="5dp"
+                    android:text="Harga jual"
+                    android:textAlignment="center"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/lblTotalHarga"
+                    android:padding="5dp"
+                    android:text="Total jual"
+                    android:textAlignment="center"
+                    android:textStyle="bold"/>
+            </TableRow>
+
+        </TableLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lTransaksi"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/btnTransaksi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transaksi"/>
+
+        <Button
+            android:id="@+id/btnKatalog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/btnTransaksi"
+            android:layout_marginLeft="10dp"
+            android:text="Katalog"/>
+
+        <Button
+            android:id="@+id/btnKeluar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/btnKatalog"
+            android:layout_marginLeft="10dp"
+            android:text="Keluar"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

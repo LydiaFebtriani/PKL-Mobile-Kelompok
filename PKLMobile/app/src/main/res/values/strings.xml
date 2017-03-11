@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">PKL Mobile</string>
+    <string name="test_splash">Halaman splashscreen</string>
+    <string name="test_login">Halaman login</string>
+    <string name="test_register">Halaman register</string>
+    <string name="test_katalog">Halaman katalog</string>
+    <string name="test_produk">Halaman produk</string>
+    <string name="test_transaksi">Halaman transaksi</string>
+    <string name="test_jual">Halaman jual</string>
+    <string name="test_rekap">Halaman rekap</string>
+    <string name="test_splash2">Halaman splashscreen 2</string>
+    <string name="title_activity_main">MainActivity</string>
+</resources>

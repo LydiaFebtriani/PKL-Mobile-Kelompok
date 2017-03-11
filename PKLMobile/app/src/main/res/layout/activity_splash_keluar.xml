@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_splash_keluar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.i14072.pklmobile.SplashKeluarActivity">
+
+    <ImageView
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/pkllogo"
+        android:layout_marginTop="59dp"
+        android:id="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Terima kasih telah menggunakan aplikasi ini.\n\nKami sangat berharap masukan dari Anda. Semua masukan silakan disampaikan ke e-mail 7314072@student.unpar.ac.id"
+        android:textAlignment="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView10"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true"/>
+</RelativeLayout>

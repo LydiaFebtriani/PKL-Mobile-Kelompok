@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fKatalog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    tools:context="com.example.i14072.pklmobile.KatalogActivity">
+
+    <TextView
+        android:id="@+id/textViewWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="welcome" />
+
+    <ListView
+        android:id="@+id/prodList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewWelcome"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="50dp" />
+
+    <RelativeLayout
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnTambah"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Tambah" />
+
+        <Button
+            android:id="@+id/btnTransaksi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/btnTambah"
+            android:layout_toRightOf="@id/btnTambah"
+            android:layout_marginLeft="10dp"
+            android:text="Transaksi" />
+
+        <Button
+            android:id="@+id/btnKeluar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/btnTransaksi"
+            android:layout_toRightOf="@id/btnTransaksi"
+            android:layout_marginLeft="10dp"
+            android:text="Keluar" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

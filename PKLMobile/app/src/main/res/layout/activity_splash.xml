@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fSplashAwal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.i14072.pklmobile.SplashActivity">
+
+    <ImageView
+        android:layout_height="250dp"
+        android:src="@drawable/pkllogo"
+        android:id="@+id/logo"
+        android:layout_marginTop="59dp"
+        android:layout_width="250dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:text="Aplikasi PKL Mobile\nOleh: Stephanie Tania"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fJual"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    tools:context="com.example.i14072.pklmobile.JualActivity">
+
+    <TextView
+        android:id="@+id/lblNamaProd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Nama produk"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/lblHargaProd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/iNamaProduk"
+        android:text="Harga jual"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:id="@+id/lblKuantitas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/iHargaJual"
+        android:text="Kuantitas"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/iNamaProduk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/lblNamaProd"
+        android:text="iNamaProduk" />
+
+    <EditText
+        android:id="@+id/iHargaJual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/lblHargaProd"
+        android:inputType="numberSigned"
+        android:text="iHargaJual" />
+
+    <EditText
+        android:id="@+id/iQtyJual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/lblKuantitas"
+        android:text="0"
+        android:inputType="numberSigned"
+        android:hint="Jumlah" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iQtyJual"
+        android:layout_marginTop="20dp" >
+
+        <Button
+            android:id="@+id/btnProses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Proses" />
+
+        <Button
+            android:id="@+id/btnBatal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/btnProses"
+            android:layout_marginLeft="10dp"
+            android:text="Batal" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

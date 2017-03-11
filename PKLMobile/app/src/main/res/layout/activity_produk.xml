@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fProduk"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    tools:context="com.example.i14072.pklmobile.ProdukActivity">
+
+    <TextView
+        android:id="@+id/lblNamaProd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Nama produk"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/lblHargaPokok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/iNamaProduk"
+        android:text="Harga pokok"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/lblHargaProd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/iHargaPokok"
+        android:text="Harga jual"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/iNamaProduk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/lblNamaProd"
+        android:text=""
+        android:inputType="text"
+        android:hint="Masukkan nama produk Anda"/>
+
+    <EditText
+        android:id="@+id/iHargaPokok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/lblHargaPokok"
+        android:text="0"
+        android:inputType="numberSigned"
+        android:hint="Masukkan harga pokok produk"/>
+
+    <EditText
+        android:id="@+id/iHargaJual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/lblHargaProd"
+        android:text="0"
+        android:inputType="numberSigned"
+        android:hint="Masukkan harga jual produk"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iHargaJual"
+        android:layout_marginTop="20dp" >
+
+        <Button
+            android:id="@+id/btnTambahProd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Tambah" />
+
+        <Button
+            android:id="@+id/btnSimpanProd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/btnTambahProd"
+            android:layout_marginLeft="10dp"
+            android:text="Simpan" />
+
+        <Button
+            android:id="@+id/btnKembali"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/btnSimpanProd"
+            android:layout_marginLeft="10dp"
+            android:text="Kembali" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
