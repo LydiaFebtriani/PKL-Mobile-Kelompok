@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fJual"
+    tools:context="com.pab.ui.Jual" >
+
+    <TextView
+        android:text="DETAIL TRANSAKSI PENJUALAN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:text="Nama Produk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:id="@+id/jual_namaProduk"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:text="Harga Jual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/jual_namaProduk"
+        android:layout_alignLeft="@+id/jual_namaProduk"
+        android:layout_alignStart="@+id/jual_namaProduk"
+        android:layout_marginTop="20dp"
+        android:id="@+id/jual_hargaJual"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:text="Kuantitas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/jual_hargaJual"
+        android:layout_alignLeft="@+id/jual_hargaJual"
+        android:layout_alignStart="@+id/jual_hargaJual"
+        android:layout_marginTop="20dp"
+        android:id="@+id/kuantitas"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:text=":"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/c2"
+        android:layout_alignBaseline="@+id/jual_hargaJual"
+        android:layout_alignBottom="@+id/jual_hargaJual"
+        android:layout_alignLeft="@+id/c1"
+        android:layout_alignStart="@+id/c1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:text=":"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/c3"
+        android:layout_alignBaseline="@+id/kuantitas"
+        android:layout_alignBottom="@+id/kuantitas"
+        android:layout_alignLeft="@+id/c1"
+        android:layout_alignStart="@+id/c1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:text = "nama"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/jual_editNamaProduk"
+        android:layout_alignBaseline="@+id/c1"
+        android:layout_alignBottom="@+id/c1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/jual_editHargaJual"
+        android:layout_alignStart="@+id/jual_editHargaJual" />
+
+    <TextView
+        android:text = "harga"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/jual_editHargaJual"
+        android:layout_below="@+id/jual_editNamaProduk"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignBaseline="@+id/c2"
+        android:layout_alignBottom="@+id/c2"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/editKuantitas"
+        android:layout_alignStart="@+id/editKuantitas" />
+
+    <Button
+        android:text="Proses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:id="@+id/buttonProses"
+        android:layout_below="@+id/editKuantitas"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Batal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonBatalJual"
+        android:layout_below="@+id/buttonProses"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:text=":"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/c1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_alignBaseline="@+id/jual_namaProduk"
+        android:layout_alignBottom="@+id/jual_namaProduk"
+        android:layout_toRightOf="@+id/jual_namaProduk"
+        android:layout_toEndOf="@+id/jual_namaProduk"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editKuantitas"
+        android:hint="kuantitas"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignBaseline="@+id/c3"
+        android:layout_alignBottom="@+id/c3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>

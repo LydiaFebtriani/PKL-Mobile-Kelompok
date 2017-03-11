@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fProduk"
+    tools:context="com.pab.ui.Produk" >
+
+    <TextView
+        android:text="DETAIL PRODUK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:text="Nama Produk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:id="@+id/namaProduk"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+    android:text="Harga Pokok"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/namaProduk"
+    android:layout_alignLeft="@+id/namaProduk"
+    android:layout_alignStart="@+id/namaProduk"
+    android:layout_marginTop="20dp"
+    android:id="@+id/hargaPokok"
+    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:text="Harga Jual"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hargaPokok"
+        android:layout_alignLeft="@+id/namaProduk"
+        android:layout_alignStart="@+id/namaProduk"
+        android:layout_marginTop="20dp"
+        android:id="@+id/hargaJual"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:text=":"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/c2"
+        android:layout_alignBaseline="@+id/hargaPokok"
+        android:layout_alignBottom="@+id/hargaPokok"
+        android:layout_alignLeft="@+id/c1"
+        android:layout_alignStart="@+id/c1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:text=":"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/c3"
+        android:layout_alignBaseline="@+id/hargaJual"
+        android:layout_alignBottom="@+id/hargaJual"
+        android:layout_alignLeft="@+id/c1"
+        android:layout_alignStart="@+id/c1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <Button
+        android:text="Tambah"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonTambahProduk"
+        android:layout_below="@+id/editHargaJual"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="45dp" />
+
+    <Button
+        android:text="Kembali"
+        android:layout_width="match_parent"
+        android:id="@+id/buttonKembali"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_below="@+id/buttonHapusProduk"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text=":"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/c1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_alignBaseline="@+id/namaProduk"
+        android:layout_alignBottom="@+id/namaProduk"
+        android:layout_toRightOf="@+id/namaProduk"
+        android:layout_toEndOf="@+id/namaProduk"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:id="@+id/editHargaPokok"
+        android:hint="harga pokok"
+        android:layout_below="@+id/editNamaProduk"
+        android:layout_toRightOf="@+id/c2"
+        android:layout_toEndOf="@+id/c2"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:id="@+id/editNamaProduk"
+        android:hint="nama produk"
+        android:layout_alignBaseline="@+id/c1"
+        android:layout_alignBottom="@+id/c1"
+        android:layout_alignLeft="@+id/editHargaPokok"
+        android:layout_alignStart="@+id/editHargaPokok">
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:id="@+id/editHargaJual"
+        android:hint="harga jual"
+        android:layout_below="@+id/editHargaPokok"
+        android:layout_alignLeft="@+id/editHargaPokok"
+        android:layout_alignStart="@+id/editHargaPokok" />
+
+    <Button
+        android:text="Simpan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/buttonSimpanProduk"
+        android:layout_below="@+id/buttonTambahProduk"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Hapus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonHapusProduk"
+        android:layout_below="@+id/buttonSimpanProduk"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
+
+
+</RelativeLayout>

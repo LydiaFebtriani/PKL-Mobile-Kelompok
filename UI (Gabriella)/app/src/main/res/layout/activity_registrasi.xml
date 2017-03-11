@@ -1,0 +1,186 @@
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <RelativeLayout
+            android:id="@+id/fRegister"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.pab.ui.Registrasi" >
+
+                <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="REGISTRASI PENGGUNA"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+
+                <EditText
+            android:id="@+id/editProduk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="produk unggul"
+            android:inputType="text"
+            android:layout_alignBaseline="@+id/produk"
+            android:layout_alignBottom="@+id/produk"
+            android:layout_alignLeft="@+id/editNama"
+            android:layout_alignStart="@+id/editNama" />
+
+                <com.pab.ui.layouteditor.CustomDatePicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/datePicker"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@+id/ttl"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/nama"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nama Lengkap"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_alignBaseline="@+id/editNama"
+                    android:layout_alignBottom="@+id/editNama"
+                    android:layout_alignLeft="@+id/email"
+                    android:layout_alignStart="@+id/email" />
+
+                <TextView
+            android:id="@+id/lapak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+                    android:text="Alamat Lapak"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/editNama"
+                    android:layout_alignLeft="@+id/nama"
+                    android:layout_alignStart="@+id/nama" />
+
+                <TextView
+            android:id="@+id/hp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+                    android:text="Nomor HP"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/editLapak"
+                    android:layout_alignLeft="@+id/lapak"
+                    android:layout_alignStart="@+id/lapak" />
+
+                <TextView
+            android:id="@+id/ttl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+                    android:text="Tanggal Lahir"
+                    android:layout_marginTop="20dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/editHP"
+                    android:layout_alignRight="@+id/lapak"
+                    android:layout_alignEnd="@+id/lapak" />
+
+                <TextView
+            android:id="@+id/produk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Produk Unggul"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/datePicker"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignRight="@+id/nama"
+                    android:layout_alignEnd="@+id/nama" />
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alamat Email"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_marginTop="30dp"
+                    android:layout_below="@+id/title"
+                    android:layout_alignLeft="@+id/datePicker"
+                    android:layout_alignStart="@+id/datePicker" />
+
+                <EditText
+                    android:id="@+id/editEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="alamat email"
+                    android:inputType="textEmailAddress"
+                    android:layout_alignBaseline="@+id/email"
+                    android:layout_alignBottom="@+id/email"
+                    android:layout_alignRight="@+id/datePicker"
+                    android:layout_alignEnd="@+id/datePicker">
+                        <requestFocus />
+                </EditText>
+
+                <EditText
+            android:id="@+id/editLapak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="alamat lapak"
+            android:inputType="text"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignBaseline="@+id/lapak"
+                    android:layout_alignBottom="@+id/lapak"
+                    android:layout_alignLeft="@+id/editNama"
+                    android:layout_alignStart="@+id/editNama" />
+
+                <EditText
+                    android:id="@+id/editHP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:ems="10"
+                    android:hint="no. hp (gunakan +62)"
+                    android:inputType="textPhonetic"
+                    android:layout_alignBaseline="@+id/hp"
+                    android:layout_alignBottom="@+id/hp"
+                    android:layout_alignLeft="@+id/editLapak"
+                    android:layout_alignStart="@+id/editLapak" />
+
+                <Button
+            android:id="@+id/buttonBatal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+                    android:text="Batal"
+                    android:layout_below="@+id/buttonSimpan"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp" />
+
+                <Button
+                    android:id="@+id/buttonSimpan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Simpan"
+                    android:layout_marginTop="30dp"
+                    android:layout_below="@+id/editProduk"
+                    android:layout_centerHorizontal="true" />
+
+                <EditText
+                    android:id="@+id/editNama"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="nama lengkap"
+                    android:layout_marginTop="10dp"
+                    android:inputType="textPersonName"
+                    android:layout_below="@+id/editEmail"
+                    android:layout_alignLeft="@+id/editEmail"
+                    android:layout_alignStart="@+id/editEmail" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+

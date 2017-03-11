@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.pab.ui.Rekap" >
+
+    <item
+        android:id="@+id/action_rekapTransaksi"
+        android:orderInCategory="100"
+        android:title="Transaksi"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_rekapKatalog"
+        android:orderInCategory="100"
+        android:title="Katalog"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_rekapKeluar"
+        android:orderInCategory="100"
+        android:title="Keluar"
+        app:showAsAction="never" />
+
+</menu>

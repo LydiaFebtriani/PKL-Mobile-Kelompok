@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.pab.ui.Katalog" >
+
+    <item
+        android:id="@+id/action_katalogTambah"
+        android:orderInCategory="100"
+        android:title="Tambah"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_katalogTransaksi"
+        android:orderInCategory="100"
+        android:title="Transaksi"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_katalogKeluar"
+        android:orderInCategory="100"
+        android:title="Keluar"
+        app:showAsAction="never" />
+
+</menu>
