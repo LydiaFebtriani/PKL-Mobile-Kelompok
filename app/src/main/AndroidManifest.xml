@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pab.unpar.pklmobilekelompok">
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- - START SPLASH SCREEN -->
+        <activity
+            android:name=".SplashScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- - END SPLASH SCREEN -->
+        <!-- - START LOGIN -->
+        <activity
+            android:name=".Login"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"></activity>
+        <!-- - END LOGIN -->
+        <!-- - START HOME -->
+        <activity
+            android:name=".Home"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"></activity>
+        <!-- - END HOME -->
+        <!-- - START KATALOG -->
+        <activity
+            android:name=".Katalog"
+            android:label="Katalog"
+            android:screenOrientation="portrait"></activity>
+        <!-- - END KATALOG -->
+        <!-- - START TRANSAKSI -->
+        <activity
+            android:name=".Transaksi"
+            android:label="Transaksi"
+            android:screenOrientation="portrait"></activity>
+        <!-- - END TRANSAKSI -->
+        <!-- - START REGISTER -->
+        <activity
+            android:name=".Register"
+            android:label="Register"
+            android:screenOrientation="portrait"></activity>
+        <!-- - END REGISTER -->
+        <!-- - START DETAIL PRODUK -->
+        <activity
+            android:name=".DetailProduk"
+            android:label="Detail Produk"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Katalog" />
+        </activity>
+        <!-- - END DETAIL PRODUK -->
+        <!-- - START JUAL -->
+        <activity
+            android:name=".Jual"
+            android:label="Jual"
+            android:parentActivityName=".Transaksi"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Transaksi" />
+        </activity>
+        <!-- - END JUAL -->
+        <!-- - START REKAP -->
+        <activity
+            android:name=".Rekap"
+            android:label="Rekap"
+            android:parentActivityName=".Transaksi"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Transaksi" />
+        </activity>
+        <!-- - END REKAP -->
+        <!-- - START TAMBAH -->
+        <activity
+            android:name=".Tambah"
+            android:label="Tambah"
+            android:parentActivityName=".Katalog"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Katalog" />
+        </activity>
+        <!-- - END TAMBAH -->
+        <!-- - START SPLASH KELUAR -->
+        <activity
+            android:name=".SplashKeluar"
+            android:screenOrientation="portrait">
+        </activity>
+        <!-- - END SPLASH KELUAR -->
+    </application>
+
+</manifest>
