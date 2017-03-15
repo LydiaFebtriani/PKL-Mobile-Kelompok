@@ -13,19 +13,41 @@
     <Button
         android:id="@+id/katalogButton"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="75dp"
         android:layout_marginTop="10dp"
 
         android:text="KATALOG"
         android:textSize="30dp"/>
 
     <Button
+        android:id="@+id/rekapButton"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tmbhProdukButton"
+
+        android:text="REKAP"
+        android:textSize="30dp"/>
+
+    <Button
         android:id="@+id/transaksiButton"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="75dp"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/katalogButton"
 
         android:text="TRANSAKSI"
         android:textSize="30dp"/>
+
+    <Button
+        android:id="@+id/tmbhProdukButton"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+
+        android:text="TAMBAH PRODUK"
+        android:textSize="30dp"
+        android:layout_below="@+id/transaksiButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp" />
 </RelativeLayout>
