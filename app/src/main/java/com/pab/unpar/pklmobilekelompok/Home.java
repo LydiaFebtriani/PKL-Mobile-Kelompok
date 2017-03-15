@@ -32,6 +32,24 @@ public class Home extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        
+        Button tmbhProduk = (Button) findViewById(R.id.tmbhProdukButton);
+        tmbhProduk.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View arg0){
+                Intent i = new Intent(Home.this, Tambah.class);
+                startActivity(i);
+            }
+        });
+
+        Button rekap = (Button) findViewById(R.id.rekapButton);
+        rekap.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View arg0){
+                Intent i = new Intent(Home.this, Rekap.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
