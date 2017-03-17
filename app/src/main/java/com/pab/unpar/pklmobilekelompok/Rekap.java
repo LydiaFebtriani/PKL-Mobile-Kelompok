@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -18,12 +21,26 @@ public class Rekap extends AppCompatActivity {
     private int totalTransaksi;
     private String sessionId;
 
+    //TAMBAHAN PENGELOMPOKKAN REKAP
+    private int idxBulan=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rekap);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         this.sessionId = sp.getString("sessionId","");
+
+        //<TAMBAHAN PENGELOMPOKKAN REKAP>
+        Spinner s=(Spinner)findViewById(R.id.filterRekap);
+        s.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                idxBulan=position;
+                printRekap();
+            }
+        });
+        //</TAMBAHAN PENGELOMPOKKAN REKAP>
 
         Log.d("Rekap","Sebelum print rekap");
         printRekap();
@@ -36,11 +53,14 @@ public class Rekap extends AppCompatActivity {
 //        List<String[]> list = dh.selectAllTransaksi(this.idUser);
         Soap soap = new Soap();
         Log.d("Rekap","Sebelum rekap");
-        ArrayList<String[]> list = soap.getRekap(sessionId);
+        //<BUAT PENGELOPOKKAN REKAP, BELUM DICOBA>
+        ArrayList<String[]> list = soap.getRekap(sessionId,idxBulan);
         Log.d("Rekap","Setelah rekap");
 
         TableRow row;
         TableLayout tl = (TableLayout) findViewById(R.id.rekapTable);
+        tl.removeAllViews();
+        //</PENGELOMPOKKAN REKAP>
         tl.setGravity(Gravity.CENTER);
 
         for(int i=0;i<list.size();i++){

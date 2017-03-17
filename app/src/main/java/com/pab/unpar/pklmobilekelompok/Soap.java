@@ -234,7 +234,8 @@ public class Soap extends Activity {
 
     //******************** METHOD UNTUK MENDAPATKAN REKAP TRANSAKSI ********************//
     /* OUTPUT: list=(String[]{"namaproduk","hargajual","qtyjual","tgljual"}),(...) */
-    public ArrayList<String[]> getRekap(String sessionId){
+    //Ada tambahan untuk pengelompokkan rekap
+    public ArrayList<String[]> getRekap(String sessionId,int bulan){
         ArrayList<String[]> list = new ArrayList<String[]>();
 
         request = new SoapObject(NAMESPACE, "gettransaksi");
@@ -270,7 +271,17 @@ public class Soap extends Activity {
                     } else{
                         res[ct] = temp[i];
                         ct=0;
-                        list.add(idx,res);
+                        //<TAMBAHAN PENGELOMPOKKAN REKAP>
+                        if(bulan>0){
+                            String blnTemp=String.format("%02d",bulan);
+                            if(res[3]!=null&&res[3].length()>6&&res[3].substring(4,6).equals(blnTemp)){
+                                list.add(idx,res);
+                            }
+                        }
+                        else{
+                            list.add(idx,res);
+                        }
+                        //</TAMBAHAN PENGELOMPOKKAN REKAP>
                         idx++;
                         res = new String[4];
 

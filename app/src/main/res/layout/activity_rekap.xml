@@ -10,10 +10,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.pab.unpar.pklmobilekelompok.Rekap">
 
+    <Spinner
+        android:id="@+id/filterRekap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/arr_bulan"
+        android:prompt="@string/prompt" />
+
     <TableLayout
         android:id="@+id/rekapTable"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/filterRekap">
     </TableLayout>
 
     <TextView
