@@ -32,6 +32,7 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_jual);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         sessionId = sp.getString("sessionId","");

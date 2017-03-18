@@ -96,6 +96,12 @@
                 android:value=".Katalog" />
         </activity>
         <!-- - END TAMBAH -->
+        <!-- - START PENGATURAN - -->
+        <activity
+            android:name=".Pengaturan"
+            android:label="Pengaturan"
+            android:screenOrientation="portrait"></activity>
+        <!-- - END PENGATURAN - -->
         <!-- - START SPLASH KELUAR -->
         <activity
             android:name=".SplashKeluar"

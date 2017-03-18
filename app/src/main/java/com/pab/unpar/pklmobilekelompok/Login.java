@@ -20,8 +20,9 @@ public class Login extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
         sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        setTheme();
+        setContentView(R.layout.activity_login);
 
         edUserName  = (EditText) findViewById(R.id.inputUsername);
         edPassword = (EditText) findViewById(R.id.inputPassword);
@@ -88,4 +89,15 @@ public class Login extends Activity {
 //            return false;
 //        }
     }
+
+    private void setTheme() {
+        if (sp.contains("themeCode")) {
+            int code = Integer.parseInt(sp.getString("themeCode", ""));
+            Utils.onActivityCreateSetTheme(this, code);
+        }
+        else {
+            Utils.onActivityCreateSetTheme(this);
+        }
+    }
+
 }

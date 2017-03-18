@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/fEditWarna"
+    android:padding="10dp" >
+
+    <TextView
+        android:text="Ubah Warna Tampilan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ubahWarnaTitle"
+        android:layout_marginTop="5dp"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:text="Tekan salah satu untuk memilih warna tampilan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ubahWarnaHint"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/ubahWarnaTitle"
+        android:textAlignment="center" />
+
+    <TextView
+        android:text="Default"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/warnaDefault"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/ubahWarnaHint"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:clickable="true" />
+
+    <TextView
+        android:text="Abu-abu"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/warnaAbuAbu"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/warnaDefault"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:clickable="true" />
+
+    <TextView
+        android:text="Hijau"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/warnaHijau"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/warnaAbuAbu"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:clickable="true" />
+
+    <TextView
+        android:text="Biru"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/warnaHijau"
+        android:id="@+id/warnaBiru"
+        android:layout_marginTop="15dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:clickable="true" />
+
+</RelativeLayout>

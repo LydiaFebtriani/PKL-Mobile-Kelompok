@@ -22,6 +22,7 @@ public class DetailProduk extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_detail_produk);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         this.sessionId = sp.getString("sessionId","");

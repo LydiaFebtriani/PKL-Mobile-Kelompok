@@ -28,6 +28,7 @@ public class Katalog extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_katalog);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         this.sessionId = sp.getString("sessionId","");

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.pab.unpar.pklmobilekelompok.Pengaturan"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/fPengaturan">
+
+    <Button
+        android:text="Ubah Warna Tampilan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonUbahWarna"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/titlePengaturan"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Ubah Password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonUbahPass"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/buttonUbahWarna"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Kembali"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:id="@+id/buttonKembaliPengaturan"
+        android:layout_below="@+id/buttonUbahPass"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Pengaturan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/titlePengaturan"
+        android:textAlignment="center"
+        android:layout_marginTop="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

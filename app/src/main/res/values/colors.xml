@@ -5,4 +5,17 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
+
+    <color name="colorPrimary_gray">#BDBDBD</color>
+    <color name="colorPrimaryDark_gray">#9E9E9E</color>
+    <color name="windowBackground_gray">#E0E0E0</color>
+
+    <color name="colorPrimary_green">#009688</color>
+    <color name="colorPrimaryDark_green">#4DB6AC</color>
+    <color name="windowBackground_green">#80CBC4</color>
+
+    <color name="colorPrimary_blue">#3F51B5</color>
+    <color name="colorPrimaryDark_blue">#5C6BC0</color>
+    <color name="windowBackground_blue">#9FA8DA</color>
+
 </resources>
