@@ -77,6 +77,27 @@ public class Soap extends Activity {
         return sessionId;
     }
 
+    //******************** METHOD UNTUK LOGOUT ********************//
+    /* OUTPUT: true = berhasil */
+    public boolean logout(String sessionId){
+        request = new SoapObject(NAMESPACE, "logout");
+        request.addProperty("sid",sessionId);
+
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+        NetworkHandler handler = new NetworkHandler("logout");
+        handler.execute();
+        int time = tunggu();
+
+        if(time<TIMEOUT){
+            String[] soapResult = result.split(",");
+            if(soapResult[0].equalsIgnoreCase("OK")){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //******************** METHOD UNTUK REGISTER PKL ********************//
     /* OUTPUT: true = berhasil */
     public boolean register(String email, String nama, String alamat, String noHp, String tgl, String produkUnggul){
