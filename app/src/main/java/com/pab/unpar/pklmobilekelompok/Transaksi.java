@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.List;
@@ -95,9 +96,18 @@ public class Transaksi extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.logout){
-            Intent i = new Intent(Transaksi.this, Login.class);
-            startActivity(i);
-            finish();
+//            Intent i = new Intent(Transaksi.this, Login.class);
+//            startActivity(i);
+//            finish();
+            Soap soap = new Soap();
+            if(soap.logout(sessionId)){
+                Intent i = new Intent(Transaksi.this, Login.class);
+                startActivity(i);
+                finish();
+            }
+            else{
+                Toast.makeText(getApplicationContext(),"Maaf, proses logout gagal!\nSilahkan coba beberapa saat lagi!",Toast.LENGTH_SHORT).show();
+            }
         }
         else if(item.getItemId() == R.id.menuhome){
             Intent i = new Intent(Transaksi.this, Home.class);
