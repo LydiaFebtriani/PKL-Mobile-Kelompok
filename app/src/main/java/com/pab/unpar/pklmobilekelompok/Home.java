@@ -1,12 +1,14 @@
 package com.pab.unpar.pklmobilekelompok;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class Home extends AppCompatActivity {
 
@@ -62,9 +64,17 @@ public class Home extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.logout){
-            Intent i = new Intent(Home.this, Login.class);
-            startActivity(i);
-            finish();
+            SharedPreferences sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
+            String sessionId = sp.getString("sessionId","");
+            Soap soap = new Soap();
+            if(soap.logout(sessionId)){
+                Intent i = new Intent(Home.this, Login.class);
+                startActivity(i);
+                finish();
+            }
+            else{
+                Toast.makeText(getApplicationContext(),"Maaf, proses logout gagal!\nSilahkan coba beberapa saat lagi!",Toast.LENGTH_SHORT).show();
+            }
         }
         else if(item.getItemId() == R.id.keluar){
             Intent i = new Intent(Home.this, SplashKeluar.class);
