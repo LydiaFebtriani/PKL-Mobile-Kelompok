@@ -11,6 +11,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LENOVO Z410_W8PRO on 3/4/2017.
@@ -21,6 +22,8 @@ public class Soap extends Activity {
     String URL = "http://webtest.unpar.ac.id/pklws/pkl.php?wsdl";
     SoapObject request;
     SoapSerializationEnvelope envelope;
+
+    DataManipulator dh = new DataManipulator(this);
 
     String result;
     int TIMEOUT = 500;
@@ -313,6 +316,53 @@ public class Soap extends Activity {
             }
         }
         return list;
+    }
+
+    public void syncData(String sessionId, int idUser){
+        NetworkHandler handler;
+        int time;
+
+        List<String[]> list;
+        String[] status = new String[]{"syncStatus = \"0\""};
+
+        /*BAGIAN REGISTER USER BARU*/
+        list = dh.selectAllUser(status);
+        for(int i=0;i<list.size();i++){
+            request = new SoapObject(NAMESPACE,"regpkl");
+            request.addProperty("user",list.get(i)[1]);
+            request.addProperty("nama",list.get(i)[3]);
+            request.addProperty("alamat",list.get(i)[4]);
+            request.addProperty("nohp",list.get(i)[5]);
+            request.addProperty("tgllahir",list.get(i)[6]);
+            request.addProperty("produkunggulan",list.get(i)[7]);
+
+            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+            handler = new NetworkHandler("regpkl");
+            handler.execute();
+            time = tunggu();
+            result = null;
+        }
+
+        /*BAGIAN DATA PRODUK*/
+        //Bagian memasukkan data produk dari database ke webserver
+        list = dh.selectAllProduk(new String[]{"idUser = \""+ (idUser+"") +"\" AND","syncStatus = \"0\""});
+        for(int i=0;i<list.size();i++){
+            request = new SoapObject(NAMESPACE,"regproduk");
+            request.addProperty("sid",sessionId);
+            request.addProperty("namaproduk",list.get(i)[1]);
+            request.addProperty("hargapokok",list.get(i)[2]);
+            request.addProperty("hargajual",list.get(i)[3]);
+
+            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+            handler = new NetworkHandler("addproduk");
+            handler.execute();
+            time = tunggu();
+            result = null;
+        }
+        //Bagian memasukkan data produk dari webserver ke database
+
     }
 
     /* KELAS HANDLER */
