@@ -187,7 +187,7 @@ public class DataManipulator {
         try{
             String str = makeConditionString(condition);
 
-            cursor = db.rawQuery("SELECT namaProduk,hargaPokok,hargaJual,idUser,syncStatus FROM "+PRODUCT_TABLE+" WHERE "+str, null);
+            cursor = db.rawQuery("SELECT idProduk,namaProduk,hargaPokok,hargaJual,idUser,syncStatus FROM "+PRODUCT_TABLE+" WHERE "+str, null);
             if(cursor.moveToFirst()){
                 //do{
                     list = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4)};
