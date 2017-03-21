@@ -1,8 +1,10 @@
 package com.pab.unpar.pklmobilekelompok;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,12 +18,14 @@ public class Login extends Activity {
     EditText edPassword;
     private DataManipulator dh;
     private SharedPreferences sp;
+    private SensorData sensorData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
         sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
-        setTheme();
+        Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_login);
 
         edUserName  = (EditText) findViewById(R.id.inputUsername);
@@ -88,16 +92,6 @@ public class Login extends Activity {
 //        else{
 //            return false;
 //        }
-    }
-
-    private void setTheme() {
-        if (sp.contains("themeCode")) {
-            int code = Integer.parseInt(sp.getString("themeCode", ""));
-            Utils.onActivityCreateSetTheme(this, code);
-        }
-        else {
-            Utils.onActivityCreateSetTheme(this);
-        }
     }
 
 }

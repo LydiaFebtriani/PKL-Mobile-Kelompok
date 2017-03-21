@@ -29,4 +29,11 @@
         <item name="android:windowBackground">@color/windowBackground_blue</item>
     </style>
 
+    <style name="AppThemeBlack" parent="ThemeOverlay.AppCompat.Dark">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary_black</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_black</item>
+        <item name="android:windowBackground">@color/windowBackground_black</item>
+    </style>
+
 </resources>

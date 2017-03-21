@@ -18,4 +18,8 @@
     <color name="colorPrimaryDark_blue">#5C6BC0</color>
     <color name="windowBackground_blue">#9FA8DA</color>
 
+    <color name="colorPrimary_black">#000000</color>
+    <color name="colorPrimaryDark_black">#616161</color>
+    <color name="windowBackground_black">#BDBDBD</color>
+
 </resources>
