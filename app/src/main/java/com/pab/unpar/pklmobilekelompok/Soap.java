@@ -258,13 +258,61 @@ public class Soap extends Activity {
 
     //******************** METHOD UNTUK MENDAPATKAN REKAP TRANSAKSI ********************//
     /* OUTPUT: list=(String[]{"namaproduk","hargajual","qtyjual","tgljual"}),(...) */
-    //Ada tambahan untuk pengelompokkan rekap
-    public ArrayList<String[]> getRekap(String sessionId,int bulan){
+    public ArrayList<String[]> getAllRekap(String sessionId){
         ArrayList<String[]> list = new ArrayList<String[]>();
 
         request = new SoapObject(NAMESPACE, "gettransaksi");
         request.addProperty("sid",sessionId);
-        request.addProperty("tgldari","20160101");
+        request.addProperty("tgldari","20170101");
+
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+        NetworkHandler handler = new NetworkHandler("gettransaksi");
+        handler.execute();
+        int time = tunggu();
+
+        if(time<TIMEOUT){
+            if(result!=null){
+                String[] temp = result.split(",");
+                String[] res = new String[4];
+                int idx =0 ;
+                int ct =0;
+                for(int i=0;i<temp.length;i++){
+                    //temp[i] = temp[i].substring(1,temp[i].length()-1);
+                    if(i%4 == 0){
+                        temp[i] = temp[i].substring(1);
+                    } else if((i+1)%4 == 0){
+                        temp[i] = temp[i].substring(0,temp[i].length()-1);
+                    }
+                    Log.d("Rekap 1",temp[i]);
+                    temp[i] = temp[i].substring(1,temp[i].length()-1);
+                    Log.d("Rekap 2",temp[i]);
+
+                    if(ct<3){
+                        res[ct] = temp[i];
+                        ct++;
+                    } else{
+                        res[ct] = temp[i];
+                        ct=0;
+                        list.add(idx,res);
+                        idx++;
+                        res = new String[4];
+
+                        Log.d("Array rekap",res[0]+" "+res[1]+" "+res[2]+" "+res[3]);
+                        Log.d("List rekap",list.get(idx-1)[0]);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+    //Ada tambahan untuk pengelompokkan rekap
+    public ArrayList<String[]> getRekap1Bulan(String sessionId,int bulan){
+        ArrayList<String[]> list = new ArrayList<String[]>();
+
+        request = new SoapObject(NAMESPACE, "gettransaksi");
+        request.addProperty("sid",sessionId);
+        request.addProperty("tgldari","2017"+bulan+"01");
 
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(request);
@@ -301,6 +349,10 @@ public class Soap extends Activity {
                             if(res[3]!=null&&res[3].length()>6&&res[3].substring(4,6).equals(blnTemp)){
                                 list.add(idx,res);
                             }
+                            else if(Integer.parseInt(res[3].substring(4,6))>bulan){
+                                //Kalau sudah melewati bulan langsung keluar
+                                break;
+                            }
                         }
                         else{
                             list.add(idx,res);
@@ -321,12 +373,10 @@ public class Soap extends Activity {
     public void syncData(String sessionId, int idUser){
         NetworkHandler handler;
         int time;
-
         List<String[]> list;
-        String[] status = new String[]{"syncStatus = \"0\""};
 
         /*BAGIAN REGISTER USER BARU*/
-        list = dh.selectAllUser(status);
+        list = dh.selectAllUser(new String[]{"syncStatus = \"0\""});
         for(int i=0;i<list.size();i++){
             request = new SoapObject(NAMESPACE,"regpkl");
             request.addProperty("user",list.get(i)[1]);
@@ -343,9 +393,10 @@ public class Soap extends Activity {
             time = tunggu();
             result = null;
         }
+        time = 0;
 
         /*BAGIAN DATA PRODUK*/
-        //Bagian memasukkan data produk dari database ke webserver
+        //*Bagian memasukkan data produk dari database ke webserver*//
         list = dh.selectAllProduk(new String[]{"idUser = \""+ (idUser+"") +"\" AND","syncStatus = \"0\""});
         for(int i=0;i<list.size();i++){
             request = new SoapObject(NAMESPACE,"regproduk");
@@ -361,8 +412,77 @@ public class Soap extends Activity {
             time = tunggu();
             result = null;
         }
-        //Bagian memasukkan data produk dari webserver ke database
+        //*Bagian memasukkan data produk dari webserver ke database*//
+        list = dh.selectAllProduk(new String[]{"idUser = \""+ (idUser+"") +"\""});
+        //Ambil produk dari webserver
+        String[] katalog = getKatalog(sessionId);
+        if(katalog.length > list.size()){
+            for(int i=0;i<katalog.length;i++){
+                //Ambil detail produk dari webserver
+                String[] produk = getDetailProduk(sessionId, katalog[i]);
+                boolean isTersedia = false;
+                for(int j=0;j<list.size();j++){
+                    //Loop untuk membandingkan
+                    if(list.get(j)[1].equals(produk[0])){
+                        isTersedia = true;
+                        break;
+                    }
+                }
 
+                if(!isTersedia){
+                    //Produk di webserver tidak ada database
+                    dh.insertProduk(produk[0],produk[1],produk[2],idUser,true);
+                }
+            }
+        }
+        time = 0;
+
+        /*BAGIAN DATA TRANSAKSI*/
+        //*Bagian memasukkan data transaksi dari database ke webserver*//
+        list = dh.selectAllTransaksi(new String[]{"idUser = \""+ (idUser+"") +"\" AND", "syncStatus = \"0\""});
+        for(int i=0;i<list.size();i++){
+            //Ambil data produk di transaksi tersebut
+            String produk = dh.select1NamaProduk(Integer.parseInt(list.get(i)[2]));
+
+            request = new SoapObject(NAMESPACE,"regtransaksi");
+            request.addProperty("sid",sessionId);
+            request.addProperty("namaproduk",produk);
+            request.addProperty("hargajual",list.get(i)[4]);
+            request.addProperty("qtyjual",list.get(i)[3]);
+            request.addProperty("tgljual",list.get(i)[5]);
+
+            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+            handler = new NetworkHandler("addtransaksi");
+            handler.execute();
+            time = tunggu();
+            result = null;
+        }
+        //*Bagian memasukkan data transaksi dari webserver ke database*//
+        list = dh.selectAllTransaksi(new String[]{"idUser = \""+ (idUser+"") +"\""});
+        //Ambil transaksi dari webserver
+        ArrayList<String[]> transaksi = getAllRekap(sessionId);
+        if(transaksi.size() > list.size()){
+            for(int i=0;i<transaksi.size();i++){
+                //Ambil detail produk dari webserver
+                String[] produk = getDetailProduk(sessionId, transaksi.get(i)[0]);
+                boolean isTersedia = false;
+                for(int j=0;j<list.size();j++){
+                    //Loop untuk membandingkan
+                    if(list.get(j)[1].equals(produk[0])){
+                        isTersedia = true;
+                        break;
+                    }
+                }
+
+                if(!isTersedia){
+                    String[] dhProduk = dh.select1FromProduk(new String[]{"namaProduk = \""+produk[0]+"\""});
+                    //Transaksi di webserver tidak ada database
+                    dh.insertTransaksi(idUser,Integer.parseInt(dhProduk[0]),Integer.parseInt(transaksi.get(i)[2]),transaksi.get(i)[1],transaksi.get(i)[3],true);
+                }
+            }
+        }
+        time = 0;
     }
 
     /* KELAS HANDLER */
