@@ -1,6 +1,8 @@
 package com.pab.unpar.pklmobilekelompok;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,9 +26,12 @@ public class Rekap extends AppCompatActivity {
     //TAMBAHAN PENGELOMPOKKAN REKAP
     private int idxBulan=0;
 
+    private SensorData sensorData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_rekap);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);

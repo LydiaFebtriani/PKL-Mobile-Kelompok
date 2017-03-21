@@ -1,7 +1,9 @@
 package com.pab.unpar.pklmobilekelompok;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,10 +24,12 @@ public class Pengaturan extends AppCompatActivity {
     private AlertDialog dialog;
     private AlertDialog.Builder builder;
     private View view;
+    private SensorData sensorData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_pengaturan);
 

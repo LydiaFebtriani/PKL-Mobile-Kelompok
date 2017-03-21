@@ -1,7 +1,9 @@
 package com.pab.unpar.pklmobilekelompok;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,10 +27,12 @@ public class Transaksi extends AppCompatActivity {
     //private int idUser;
     private String[] values;
     private String sessionId;
+    private SensorData sensorData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_transaksi);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);

@@ -2,9 +2,11 @@ package com.pab.unpar.pklmobilekelompok;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -28,10 +30,12 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
     private String sessionId;
     private String[] produk;
     private Soap soap = new Soap();
+    private SensorData sensorData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_jual);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
