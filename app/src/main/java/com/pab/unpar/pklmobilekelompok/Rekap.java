@@ -66,7 +66,7 @@ public class Rekap extends AppCompatActivity {
         Soap soap = new Soap();
         Log.d("Rekap","Sebelum rekap");
         //<BUAT PENGELOPOKKAN REKAP, BELUM DICOBA>
-        ArrayList<String[]> list = soap.getRekap(sessionId,idxBulan);
+        ArrayList<String[]> list = soap.getRekap1Bulan(sessionId,idxBulan);
         Log.d("Rekap","Setelah rekap");
 
         TableRow row;
