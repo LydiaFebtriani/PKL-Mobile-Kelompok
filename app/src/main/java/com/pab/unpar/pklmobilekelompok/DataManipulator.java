@@ -27,9 +27,9 @@ public class DataManipulator {
     private SQLiteStatement insertStmtProduk;
     private SQLiteStatement insertStmtTransaksi;
 
-    private static final String INSERT_USER = "insert into "+USER_TABLE+" (email,password,nama,alamat,nohp,tgllahir,produkunggul) values (?,?,?,?,?,?,?)";
-    private static final String INSERT_PRODUK = "insert into "+PRODUCT_TABLE+" (namaProduk, hargaPokok, hargaJual, idUser) values(?,?,?,?)";
-    private static final String INSER_TRANSAKSI = "insert into "+TRANSACTION_TABLE+" (idUser,idProduk,kuantitas,harga,tglJual) values(?,?,?,?,?)";
+    private static final String INSERT_USER = "insert into "+USER_TABLE+" (email,password,nama,alamat,nohp,tgllahir,produkunggul,syncStatus) values (?,?,?,?,?,?,?,?)";
+    private static final String INSERT_PRODUK = "insert into "+PRODUCT_TABLE+" (namaProduk, hargaPokok, hargaJual, idUser,syncStatus) values(?,?,?,?,?)";
+    private static final String INSER_TRANSAKSI = "insert into "+TRANSACTION_TABLE+" (idUser,idProduk,kuantitas,harga,tglJual,syncStatus) values(?,?,?,?,?,?)";
 
     public DataManipulator(Context context){
         DataManipulator.context = context;
@@ -40,9 +40,17 @@ public class DataManipulator {
         this.insertStmtTransaksi = DataManipulator.db.compileStatement(INSER_TRANSAKSI);
     }
 
+    public String makeConditionString(String[] condition){
+        String str = "";
+        for(int i=0;i<condition.length;i++){
+            str+=condition[i]+" ";
+        }
+        return str;
+    }
+
     /******************* USER *******************/
     /* INSERT */
-    public long insertUser(String email, String password, String nama, String alamat, String nohp, String tgllahir, String produkunggul){
+    public long insertUser(String email, String password, String nama, String alamat, String nohp, String tgllahir, String produkunggul, boolean syncStatus){
         this.insertStmtUser.bindString(1,email);
         this.insertStmtUser.bindString(2,password);
         this.insertStmtUser.bindString(3,nama);
@@ -50,6 +58,7 @@ public class DataManipulator {
         this.insertStmtUser.bindString(5,nohp);
         this.insertStmtUser.bindString(6,tgllahir);
         this.insertStmtUser.bindString(7,produkunggul);
+        this.insertStmtUser.bindLong(8,syncStatus?1:0);
         return this.insertStmtUser.executeInsert();
     }
     /* DELETE */
@@ -57,17 +66,22 @@ public class DataManipulator {
         db.delete(USER_TABLE,null,null);
     }
     /* SELECT ALL */
-    public List<String[]> selectAllUser() {
+    /*cth param: new String[]{
+                    "email like \"email@mail.com\" AND" , "password like \"password\" OR" ,...
+                }*/
+    public List<String[]> selectAllUser(String[] condition) {
         List<String[]> list = new ArrayList<String[]>();
-        Cursor cursor = db.query(USER_TABLE,
-                new String[]{
-                        "idUser","email","password","nama","alamat","nohp","tgllahir","produkunggul"
-                },
-                null,null,null,null,"idUser asc");
+//        Cursor cursor = db.query(USER_TABLE,
+//                new String[]{
+//                        "idUser","email","password","nama","alamat","nohp","tgllahir","produkunggul"
+//                },
+//                null,null,null,null,"idUser asc");
+        String str = makeConditionString(condition);
+        Cursor cursor = db.rawQuery("SELECT idUser,email,password,nama,alamat,nohp,tgllahir,produkunggul,syncStatus FROM "+USER_TABLE+" WHERE "+str,null);
         int x=0;
         if(cursor.moveToFirst()){
             do{
-                String[] b1 = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7)};
+                String[] b1 = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8)};
                 list.add(b1);
 
                 x=x+1;
@@ -80,14 +94,19 @@ public class DataManipulator {
         return list;
     }
     /* SELECT EMAIL AND PASSWORD ALL USER */
-    public String[] select1User(String email, String password){
+    /*cth param: new String[]{
+                    "email like \"email@mail.com\" AND" , "password like \"password\" OR" ,...
+                }*/
+    public String[] select1User(String[] condition){
         Cursor cursor = null;
-        String[] list  = new String[3];
+        String[] list  = new String[9];
         try{
-            cursor = db.rawQuery("SELECT idUser,email,password FROM "+USER_TABLE+" WHERE email like \""+email+"\" AND password like \""+password+"\"",null);
+            String str = makeConditionString(condition);
+
+            cursor = db.rawQuery("SELECT idUser,email,password,nama,alamat,nohp,tgllahir,produkunggul,syncStatus FROM "+USER_TABLE+" WHERE "+str,null);//email like \""+email+"\" AND password like \""+password+"\"",null);
             if(cursor.moveToFirst()){
                 //do{
-                    list = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2)};
+                    list = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8)};
                 //}while(cursor.moveToNext());
             }
             return list;
@@ -98,11 +117,12 @@ public class DataManipulator {
 
     /******************* PRODUK *******************/
     /* INSERT */
-    public long insertProduk(String namaProduk,String hargaPokok,String hargaJual,int idUser){
+    public long insertProduk(String namaProduk,String hargaPokok,String hargaJual,int idUser, boolean syncStatus){
         this.insertStmtProduk.bindString(1,namaProduk);
         this.insertStmtProduk.bindString(2,hargaPokok);
         this.insertStmtProduk.bindString(3,hargaJual);
         this.insertStmtProduk.bindLong(4,idUser);
+        this.insertStmtProduk.bindLong(5,syncStatus?1:0);
         return this.insertStmtProduk.executeInsert();
     }
     /* DELETE */
@@ -110,18 +130,22 @@ public class DataManipulator {
         db.delete(PRODUCT_TABLE,null,null);
     }
     /* SELECT ALL */
-    public List<String[]> selectAllProduk(int idUser) {
+    /* cth param: new String[]{
+                    "idProduk like \"1\" AND" , "namaProduk like \"produk\" OR" ,...
+                  }*/
+    public List<String[]> selectAllProduk(String[] condition) {
         List<String[]> list = new ArrayList<String[]>();
 //        Cursor cursor = db.query(PRODUCT_TABLE,
 //                new String[]{
 //                        "idProduk", "namaProduk", "hargaPokok", "hargaJual"
 //                },
 //                null,null,null,null,"idProduk asc");
-        Cursor cursor = db.rawQuery("SELECT idProduk, namaProduk, hargaPokok, hargaJual FROM "+PRODUCT_TABLE+" WHERE idUser=\""+(idUser+"")+"\"", null);
+        String str = makeConditionString(condition);
+        Cursor cursor = db.rawQuery("SELECT idProduk, namaProduk, hargaPokok, hargaJual,syncStatus FROM "+PRODUCT_TABLE+" WHERE "+str, null);
         int x=0;
         if(cursor.moveToFirst()){
             do{
-                String[] b1 = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3)};
+                String[] b1 = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4)};
                 list.add(b1);
 
                 x=x+1;
@@ -154,14 +178,19 @@ public class DataManipulator {
         return list;
     }
     /* SELECT 1 FROM TABLE */
-    public String[] select1FromProduk(int idProduk){
+    /* cth param: new String[]{
+                    "idProduk like \"1\" AND" , "namaProduk like \"produk\" OR" ,...
+                  }*/
+    public String[] select1FromProduk(String[] condition){
         Cursor cursor = null;
-        String[] list  = new String[3];
+        String[] list  = new String[5];
         try{
-            cursor = db.rawQuery("SELECT namaProduk,hargaPokok,hargaJual FROM "+PRODUCT_TABLE+" WHERE idProduk=\""+(idProduk+"")+"\"", null);
+            String str = makeConditionString(condition);
+
+            cursor = db.rawQuery("SELECT namaProduk,hargaPokok,hargaJual,idUser,syncStatus FROM "+PRODUCT_TABLE+" WHERE "+str, null);
             if(cursor.moveToFirst()){
                 //do{
-                    list = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2)};
+                    list = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4)};
                 //}while(cursor.moveToNext());
             }
             return list;
@@ -194,12 +223,13 @@ public class DataManipulator {
 
     /******************* TRANSAKSI *******************/
     /* INSERT */
-    public long insertTransaksi(int idUser,int idProduk, int kuantitas,String harga,String tglJual){
+    public long insertTransaksi(int idUser,int idProduk, int kuantitas,String harga,String tglJual, boolean syncStatus){
         this.insertStmtTransaksi.bindLong(1,idUser);
         this.insertStmtTransaksi.bindLong(2,idProduk);
         this.insertStmtTransaksi.bindLong(3,kuantitas);
         this.insertStmtTransaksi.bindString(4,harga);
         this.insertStmtTransaksi.bindString(5,tglJual);
+        this.insertStmtTransaksi.bindLong(6,syncStatus?1:0);
         return this.insertStmtTransaksi.executeInsert();
     }
     /* DELETE */
@@ -207,7 +237,10 @@ public class DataManipulator {
         db.delete(TRANSACTION_TABLE,null,null);
     }
     /* SELECT ALL */
-    public List<String[]> selectAllTransaksi(int idUser) {
+    /* cth param: new String[]{
+                    "idUser like \"1\" AND" , "idProduk like \"1\" OR" ,...
+                  }*/
+    public List<String[]> selectAllTransaksi(String[] condition) {
         List<String[]> list = new ArrayList<String[]>();
 //        Cursor cursor = db.query(TRANSACTION_TABLE,
 //                new String[]{
@@ -215,11 +248,12 @@ public class DataManipulator {
 //                },
 //                null,null,null,null,"idTransaksi asc");
         Log.d("Select All Transaksi","Sebelum rawQuery");
-        Cursor cursor = db.rawQuery("SELECT idTransaksi, idUser, idProduk, kuantitas, harga, tglJual FROM "+TRANSACTION_TABLE+" WHERE idUser=\""+(idUser+"")+"\"", null);
+        String str = makeConditionString(condition);
+        Cursor cursor = db.rawQuery("SELECT idTransaksi, idUser, idProduk, kuantitas, harga, tglJual,syncStatus FROM "+TRANSACTION_TABLE+" WHERE "+str, null);
         int x=0;
         if(cursor.moveToFirst()){
             do{
-                String[] b1 = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5)};
+                String[] b1 = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6)};
                 list.add(b1);
 
                 x=x+1;
@@ -233,14 +267,19 @@ public class DataManipulator {
         return list;
     }
     /* SELECT SEMUA TRANSAKSI DARI 1 USER */
-    public String[] select1FromTransaksi(int idUser){
+    /* cth param: new String[]{
+                    "idUser like \"1\" AND" , "idProduk like \"1\" OR" ,...
+                  }*/
+    public String[] select1FromTransaksi(String[] condition){
         Cursor cursor = null;
-        String[] list  = new String[5];
+        String[] list  = new String[7];
         try{
-            cursor = db.rawQuery("SELECT idTransaksi,idProduk,kuantitas,harga,tglJual FROM "+TRANSACTION_TABLE+" WHERE idUser=?", new String[]{idUser+""});
+            String str = makeConditionString(condition);
+
+            cursor = db.rawQuery("SELECT idTransaksi,idUser,idProduk,kuantitas,harga,tglJual,syncStatus FROM "+TRANSACTION_TABLE+" WHERE "+str,null);
             if(cursor.moveToFirst()){
                 do{
-                    list = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4)};
+                    list = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6)};
                 }while(cursor.moveToNext());
             }
             return list;
@@ -263,9 +302,9 @@ public class DataManipulator {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE "+USER_TABLE+" (idUser INTEGER PRIMARY KEY autoincrement, email TEXT,password TEXT,nama TEXT,alamat TEXT,nohp TEXT,tgllahir TEXT,produkunggul TEXT)");
-            db.execSQL("CREATE TABLE "+PRODUCT_TABLE+" (idProduk INTEGER PRIMARY KEY autoincrement, namaProduk TEXT, hargaPokok INTEGER, hargaJual INTEGER, idUser INTEGER, FOREIGN KEY(idUser) REFERENCES "+USER_TABLE+"(idUser))");
-            db.execSQL("CREATE TABLE "+TRANSACTION_TABLE+" (idTransaksi INTEGER PRIMARY KEY autoincrement, idUser INTEGER, idProduk INTEGER, kuantitas INTEGER, harga TEXT, tglJual TEXT,FOREIGN KEY (idUser) REFERENCES "+USER_TABLE+"(idUser), FOREIGN KEY (idProduk) REFERENCES "+PRODUCT_TABLE+"(idProduk))");
+            db.execSQL("CREATE TABLE "+USER_TABLE+" (idUser INTEGER PRIMARY KEY autoincrement, email TEXT,password TEXT,nama TEXT,alamat TEXT,nohp TEXT,tgllahir TEXT,produkunggul TEXT,syncStatus BOOLEAN)");
+            db.execSQL("CREATE TABLE "+PRODUCT_TABLE+" (idProduk INTEGER PRIMARY KEY autoincrement, namaProduk TEXT, hargaPokok INTEGER, hargaJual INTEGER, idUser INTEGER,syncStatus BOOLEAN, FOREIGN KEY(idUser) REFERENCES "+USER_TABLE+"(idUser))");
+            db.execSQL("CREATE TABLE "+TRANSACTION_TABLE+" (idTransaksi INTEGER PRIMARY KEY autoincrement, idUser INTEGER, idProduk INTEGER, kuantitas INTEGER, harga TEXT, tglJual TEXT,syncStatus BOOLEAN,FOREIGN KEY (idUser) REFERENCES "+USER_TABLE+"(idUser), FOREIGN KEY (idProduk) REFERENCES "+PRODUCT_TABLE+"(idProduk))");
         }
 
         @Override
