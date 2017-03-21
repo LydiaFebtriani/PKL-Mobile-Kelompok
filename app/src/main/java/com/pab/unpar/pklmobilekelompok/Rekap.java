@@ -34,10 +34,16 @@ public class Rekap extends AppCompatActivity {
 
         //<TAMBAHAN PENGELOMPOKKAN REKAP>
         Spinner s=(Spinner)findViewById(R.id.filterRekap);
-        s.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 idxBulan=position;
+                printRekap();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                idxBulan=0;
                 printRekap();
             }
         });
