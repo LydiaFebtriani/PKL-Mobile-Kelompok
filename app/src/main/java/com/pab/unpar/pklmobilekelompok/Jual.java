@@ -31,6 +31,7 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
     private String[] produk;
     private Soap soap = new Soap();
     private SensorData sensorData;
+    SharedPreferences.Editor ed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,33 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_jual);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
-        sessionId = sp.getString("sessionId","");
+        ed = this.sp.edit();
+
+        Connect con = new Connect();
+//        con.sync(this);
+        if(!sp.getString("sessionId","").isEmpty()){
+            this.sessionId = sp.getString("sessionId","");
+        } else{
+            this.sessionId = sp.getString("idUser","");
+        }
+        /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
+        if(sp.getString("sessionId","").isEmpty()){
+            Connect con = new Connect();
+            String temp = con.loginServer(this,sp.getString("user",""),sp.getString("password",""));
+            Log.d("Katalog temp",temp);
+            if(temp != ""){
+                //Kalau bisa login
+                ed = sp.edit();
+                ed.putString("sessionId", sessionId);
+                ed.commit();
+                this.sessionId = sp.getString("sessionId","");
+                Log.d("Connect di Katalog", sp.getString("sessionId",""));
+            }
+            this.sessionId = sp.getString("idUser","");
+        }
+        else{
+            this.sessionId = sp.getString("sessionsessionId","");
+        }*/
 
         Button batal = (Button) findViewById(R.id.buttonBatal);
         batal.setOnClickListener(this);
@@ -53,7 +80,7 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
     private void viewDetail(){
 //        dh = new DataManipulator(this);
 //        String[] list = dh.select1FromProduk(sp.getInt("idProduk",-1));
-        produk = soap.getDetailProduk(sessionId,sp.getString("produk",""));
+        produk = soap.getDetailProduk(this,sessionId,sp.getString("produk",""));
 
         if(produk.length>0 && produk!=null) {
             EditText nama = (EditText) findViewById(R.id.jualNamaProduk);
@@ -105,7 +132,7 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
                                 SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
                                 String hariIni = df.format(c.getTime());
 //                                dh.insertTransaksi(sp.getInt("idUser",-1),sp.getInt("idProduk",-1),Integer.parseInt(kuantitas),totalHarga,hariIni);
-                                boolean res = soap.setAddTransaksi(sessionId,namaProduk,hargaProduk,kuantitas,hariIni);
+                                boolean res = soap.setAddTransaksi(getApplicationContext(),sessionId,namaProduk,hargaProduk,kuantitas,hariIni);
                                 if(res){
                                     Log.d("Jual",res+" "+hariIni);
                                 }

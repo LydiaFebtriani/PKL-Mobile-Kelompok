@@ -1,9 +1,15 @@
 package com.pab.unpar.pklmobilekelompok;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,12 +17,62 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class Home extends AppCompatActivity {
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_home);
+
+        sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
+
+        Connect con = new Connect();
+        String sessionId = null;
+        int idUser = -1;
+        if(!sp.getString("sessionId","").isEmpty()){
+            sessionId = sp.getString("sessionId","");
+        } else{
+            ed.putString("sessionId",sessionId);
+            ed.commit();
+        }
+        if(!sp.getString("idUser","").isEmpty()){
+            idUser = Integer.parseInt(sp.getString("idUser",""));
+        } else{
+            ed.putString("idUser",idUser+"");
+            ed.commit();
+        }
+        Log.d("Session dan idUser",sessionId+" "+idUser);
+        con.sync(this,sessionId,idUser);
+//        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo info = cm.getNetworkInfo(cm.TYPE_MOBILE);
+//        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+//        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+//                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED){
+//            Soap soap = new Soap();
+//            String sessionId = null;
+//            int idUser = -1;
+//            if(!sp.getString("sessionId","").isEmpty()){
+//                sessionId = sp.getString("sessionId","");
+//            }
+//            if(!sp.getString("idUser","").isEmpty()){
+//                idUser = Integer.parseInt(sp.getString("idUser",""));
+//            }
+//            soap.sync(this,sessionId,idUser);
+//        }
+//        if(info!=null && info.isConnected()){
+//            Soap soap = new Soap();
+//            String sessionId = null;
+//            int idUser = -1;
+//            if(!sp.getString("sessionId","").isEmpty()){
+//                sessionId = sp.getString("sessionId","");
+//            }
+//            if(!sp.getString("idUser","").isEmpty()){
+//                idUser = Integer.parseInt(sp.getString("idUser",""));
+//            }
+//            soap.sync(this,sessionId,idUser);
+//        }
 
         Button katalog = (Button) findViewById(R.id.katalogButton);
         katalog.setOnClickListener(new View.OnClickListener(){
@@ -67,7 +123,7 @@ public class Home extends AppCompatActivity {
             SharedPreferences sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
             String sessionId = sp.getString("sessionId","");
             Soap soap = new Soap();
-            if(soap.logout(sessionId)){
+            if(soap.logout(this,sessionId)){
                 Intent i = new Intent(Home.this, Login.class);
                 startActivity(i);
                 finish();

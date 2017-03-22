@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ public class Tambah extends AppCompatActivity implements View.OnClickListener{
 //    private int idUser;
     private String sessionId;
     private SensorData sensorData;
+    SharedPreferences.Editor ed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,33 @@ public class Tambah extends AppCompatActivity implements View.OnClickListener{
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_tambah);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
-        this.sessionId = sp.getString("sessionId","");
+        ed = this.sp.edit();
+
+        Connect con = new Connect();
+//        con.sync(this);
+        if(!sp.getString("sessionId","").isEmpty()){
+            this.sessionId = sp.getString("sessionId","");
+        } else{
+            this.sessionId = sp.getString("idUser","");
+        }
+        /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
+        if(sp.getString("sessionId","").isEmpty()){
+            Connect con = new Connect();
+            String temp = con.loginServer(this,sp.getString("user",""),sp.getString("password",""));
+            Log.d("Katalog temp",temp);
+            if(temp != ""){
+                //Kalau bisa login
+                ed = sp.edit();
+                ed.putString("sessionId", sessionId);
+                ed.commit();
+                this.sessionId = sp.getString("sessionId","");
+                Log.d("Connect di Katalog", sp.getString("sessionId",""));
+            }
+            this.sessionId = sp.getString("idUser","");
+        }
+        else{
+            this.sessionId = sp.getString("sessionsessionId","");
+        }*/
 
         Button batal = (Button) findViewById(R.id.buttonBatal);
         Button simpan = (Button) findViewById(R.id.buttonSimpan);
@@ -56,7 +84,7 @@ public class Tambah extends AppCompatActivity implements View.OnClickListener{
 //                dh.insertProduk(nama,hargaPokok,hargaJual,this.idUser);
 
                 Soap soap = new Soap();
-                boolean res = soap.setAddProduk(sessionId,nama,hargaPokok,hargaJual);
+                boolean res = soap.setAddProduk(this,sessionId,nama,hargaPokok,hargaJual);
                 if(res){
                     Toast.makeText(getApplicationContext(),"Produk berhasil ditambahkan!",Toast.LENGTH_SHORT).show();
                     i = new Intent(Tambah.this, Katalog.class);

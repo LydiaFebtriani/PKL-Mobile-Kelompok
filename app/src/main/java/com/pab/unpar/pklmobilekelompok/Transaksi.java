@@ -28,6 +28,7 @@ public class Transaksi extends AppCompatActivity {
     private String[] values;
     private String sessionId;
     private SensorData sensorData;
+    SharedPreferences.Editor ed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,33 @@ public class Transaksi extends AppCompatActivity {
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_transaksi);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
-        this.sessionId = sp.getString("sessionId","");
+        ed = this.sp.edit();
+
+        Connect con = new Connect();
+//        con.sync(this);
+        if(!sp.getString("sessionId","").isEmpty()){
+            this.sessionId = sp.getString("sessionId","");
+        } else{
+            this.sessionId = sp.getString("idUser","");
+        }
+        /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
+        if(sp.getString("sessionId","").isEmpty()){
+            Connect con = new Connect();
+            String temp = con.loginServer(this,sp.getString("user",""),sp.getString("password",""));
+            Log.d("Katalog temp",temp);
+            if(temp != ""){
+                //Kalau bisa login
+                ed = sp.edit();
+                ed.putString("sessionId", sessionId);
+                ed.commit();
+                this.sessionId = sp.getString("sessionId","");
+                Log.d("Connect di Katalog", sp.getString("sessionId",""));
+            }
+            this.sessionId = sp.getString("idUser","");
+        }
+        else{
+            this.sessionId = sp.getString("sessionsessionId","");
+        }*/
 
         Button rekap = (Button) findViewById(R.id.buttonRekap);
         rekap.setOnClickListener(new View.OnClickListener(){
@@ -83,7 +110,7 @@ public class Transaksi extends AppCompatActivity {
 //            values[i] = list.get(i)[1];
 //        }
         Soap soap = new Soap();
-        values = soap.getKatalog(sessionId);
+        values = soap.getKatalog(this,sessionId);
         if(values!=null){
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,values);
             listView.setAdapter(adapter);
@@ -104,7 +131,7 @@ public class Transaksi extends AppCompatActivity {
 //            startActivity(i);
 //            finish();
             Soap soap = new Soap();
-            if(soap.logout(sessionId)){
+            if(soap.logout(this,sessionId)){
                 Intent i = new Intent(Transaksi.this, Login.class);
                 startActivity(i);
                 finish();

@@ -100,8 +100,10 @@ public class DataManipulator {
     public String[] select1User(String[] condition){
         Cursor cursor = null;
         String[] list  = new String[9];
+        Log.d("Condition","masuk");
         try{
             String str = makeConditionString(condition);
+            Log.d("Condition",str);
 
             cursor = db.rawQuery("SELECT idUser,email,password,nama,alamat,nohp,tgllahir,produkunggul,syncStatus FROM "+USER_TABLE+" WHERE "+str,null);//email like \""+email+"\" AND password like \""+password+"\"",null);
             if(cursor.moveToFirst()){
@@ -113,6 +115,12 @@ public class DataManipulator {
         }finally {
             cursor.close();
         }
+    }
+    /* UPDATE SYNCSTATUS 1 RECORD FROM USER TABLE */
+    public void update1UserStatus(int idUser,boolean syncStatus){
+        Cursor cursor = db.rawQuery("UPDATE "+USER_TABLE+" SET syncStatus = \""+syncStatus+"\" WHERE idUser = \""+idUser+"\"",null);
+        cursor.moveToFirst();
+        cursor.close();
     }
 
     /******************* PRODUK *******************/
@@ -214,9 +222,15 @@ public class DataManipulator {
             cursor.close();
         }
     }
+    /* UPDATE SYNCSTATUS 1 RECORD FROM PRODUCT TABLE */
+    public void update1ProdukStatus(int idProduk, boolean syncStatus){
+        Cursor cursor = db.rawQuery("UPDATE "+PRODUCT_TABLE+" SET syncStatus=\""+syncStatus+"\" WHERE idProduk=\""+(idProduk+"")+"\"",null);
+        cursor.moveToFirst();
+        cursor.close();
+    }
     /* UPDATE 1 RECORD FROM PRODUCT TABLE */
-    public void update1FromProduk(int idProduk, String namaProduk,String hargaPokok,String hargaJual,int idUser){
-        Cursor cursor = db.rawQuery("UPDATE "+PRODUCT_TABLE+" SET namaProduk=\""+namaProduk+"\", hargaPokok=\""+hargaPokok+"\", hargaJual=\""+hargaJual+"\" WHERE idUser=\""+(idUser+"")+"\" AND idProduk=\""+(idProduk+"")+"\"",null);
+    public void update1Produk(int idProduk,String namaProduk,String hargaPokok,String hargaJual,int idUser, boolean syncStatus){
+        Cursor cursor = db.rawQuery("UPDATE "+PRODUCT_TABLE+" SET namaProduk=?, hargaPokok=?, hargaJual=?, syncStatus=? WHERE idProduk=? AND idUser=?",new String[]{namaProduk,hargaPokok,hargaJual,syncStatus+"",idProduk+"",idUser+""});
         cursor.moveToFirst();
         cursor.close();
     }
@@ -287,9 +301,15 @@ public class DataManipulator {
             cursor.close();
         }
     }
+    /* UPDATE SYNCSTATUS 1 RECORD FROM TRANSACTION TABLE */
+    public void update1TransaksiStatus(int idTransaksi, boolean syncStatus){
+        Cursor cursor = db.rawQuery("UPDATE "+TRANSACTION_TABLE+" SET syncStatus=\""+syncStatus+"\" WHERE idTransaksi=\""+(idTransaksi+"")+"\"",null);
+        cursor.moveToFirst();
+        cursor.close();
+    }
     /* UPDATE 1 RECORD FROM TRANSACTION TABLE */
-    public void update1FromTransaksi(int idTransaksi, int idProduk, int kuantitas, String harga, String tglJual){
-        Cursor cursor = db.rawQuery("UPDATE "+TRANSACTION_TABLE+" SET kuantitas=\""+(kuantitas+"")+"\", harga=\""+harga+"\", tglJual=\""+tglJual+"\" WHERE idTransaksi=\""+(idTransaksi+"")+"\" AND idProduk=\""+(idProduk+"")+"\"",null);
+    public void update1Transaksi(int idTransaksi, int idUser,int idProduk, int kuantitas,String harga,String tglJual,boolean syncStatus){
+        Cursor cursor = db.rawQuery("UPDATE "+TRANSACTION_TABLE+" SET idProduk=?, kuantitas=?, harga=?, tglJual=?, syncStatus=? WHERE idTransaksi=? AND idUser=?",new String[]{idProduk+"",kuantitas+"",harga,tglJual,syncStatus+"",idTransaksi+"",idUser+""});
         cursor.moveToFirst();
         cursor.close();
     }

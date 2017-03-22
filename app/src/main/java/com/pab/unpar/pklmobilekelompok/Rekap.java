@@ -27,6 +27,7 @@ public class Rekap extends AppCompatActivity {
     private int idxBulan=0;
 
     private SensorData sensorData;
+    SharedPreferences.Editor ed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,33 @@ public class Rekap extends AppCompatActivity {
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_rekap);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
-        this.sessionId = sp.getString("sessionId","");
+        ed = this.sp.edit();
+
+        Connect con = new Connect();
+//        con.sync(this);
+        if(!sp.getString("sessionId","").isEmpty()){
+            this.sessionId = sp.getString("sessionId","");
+        } else{
+            this.sessionId = sp.getString("idUser","");
+        }
+        /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
+        if(sp.getString("sessionId","").isEmpty()){
+            Connect con = new Connect();
+            String temp = con.loginServer(this,sp.getString("user",""),sp.getString("password",""));
+            Log.d("Katalog temp",temp);
+            if(temp != ""){
+                //Kalau bisa login
+                ed = sp.edit();
+                ed.putString("sessionId", sessionId);
+                ed.commit();
+                this.sessionId = sp.getString("sessionId","");
+                Log.d("Connect di Katalog", sp.getString("sessionId",""));
+            }
+            this.sessionId = sp.getString("idUser","");
+        }
+        else{
+            this.sessionId = sp.getString("sessionsessionId","");
+        }*/
 
         //<TAMBAHAN PENGELOMPOKKAN REKAP>
         Spinner s=(Spinner)findViewById(R.id.filterRekap);
@@ -66,7 +93,7 @@ public class Rekap extends AppCompatActivity {
         Soap soap = new Soap();
         Log.d("Rekap","Sebelum rekap");
         //<BUAT PENGELOPOKKAN REKAP, BELUM DICOBA>
-        ArrayList<String[]> list = soap.getRekap1Bulan(sessionId,idxBulan);
+        ArrayList<String[]> list = soap.getRekap1Bulan(this,sessionId,idxBulan);
         Log.d("Rekap","Setelah rekap");
 
         TableRow row;

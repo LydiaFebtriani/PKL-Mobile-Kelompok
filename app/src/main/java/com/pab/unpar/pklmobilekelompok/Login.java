@@ -70,13 +70,29 @@ public class Login extends Activity {
 
     public boolean checkUser(String email, String password){
         Soap soap = new Soap();
-        String id =soap.login(email,password);
-        if(id != null){
-            SharedPreferences.Editor ed = sp.edit();
-            ed.putString("sessionId",id);
-            ed.commit();
-            Log.d("Session Id",id);
-            return true;
+        String[] id =soap.login(this,email,password);
+
+        SharedPreferences.Editor ed = sp.edit();
+        ed.clear();
+        ed.commit();
+        if(id[0] != null) {
+            if (id.length == 1) {
+                ed.putString("sessionId", id[0]);
+                ed.putString("user", email);
+                ed.commit();
+                Log.d("Session Id", id[0]);
+                return true;
+            } else if (id.length == 3) {
+                ed.putString("idUser", id[0]);
+                ed.putString("user", id[1]);
+                ed.putString("password", id[2]);
+                ed.commit();
+                Log.d("Login no connection", id[0]+" "+id[1]+" "+id[2]);
+                return true;
+            }
+            else{
+                return false;
+            }
         }
         else{
             return false;

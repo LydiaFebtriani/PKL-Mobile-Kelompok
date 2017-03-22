@@ -21,13 +21,15 @@ import java.util.List;
 
 public class Katalog extends AppCompatActivity {
     private DataManipulator dh;
+    private Soap soap;
     private ListView listView;
     //private int[] valuesId;
     private SharedPreferences sp;
     //private int idUser;
     private String[] values;
-    private String sessionId;
+    private String id;
     private SensorData sensorData;
+    SharedPreferences.Editor ed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,33 @@ public class Katalog extends AppCompatActivity {
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_katalog);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
-        this.sessionId = sp.getString("sessionId","");
+        ed = this.sp.edit();
+
+        Connect con = new Connect();
+//        con.sync(this);
+        if(!sp.getString("sessionId","").isEmpty()){
+            this.id = sp.getString("sessionId","");
+        } else{
+            this.id = sp.getString("idUser","");
+        }
+        /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
+        if(sp.getString("sessionId","").isEmpty()){
+            Connect con = new Connect();
+            String temp = con.loginServer(this,sp.getString("user",""),sp.getString("password",""));
+            Log.d("Katalog temp",temp);
+            if(temp != ""){
+                //Kalau bisa login
+                ed = sp.edit();
+                ed.putString("sessionId", id);
+                ed.commit();
+                this.id = sp.getString("sessionId","");
+                Log.d("Connect di Katalog", sp.getString("sessionId",""));
+            }
+            this.id = sp.getString("idUser","");
+        }
+        else{
+            this.id = sp.getString("sessionId","");
+        }*/
 
         Button tambah = (Button) findViewById(R.id.buttonTambah);
         tambah.setOnClickListener(new View.OnClickListener(){
@@ -55,7 +83,6 @@ public class Katalog extends AppCompatActivity {
                 String itemValue = (String) listView.getItemAtPosition(itemPosition);
                 List<String> list = Arrays.asList(values);
                 if(list.contains(itemValue)){
-                    SharedPreferences.Editor ed = sp.edit();
                     ed.putString("produk",values[itemPosition]);
                     ed.commit();
                     Log.d("Katalog, produk",values[itemPosition]);
@@ -82,8 +109,8 @@ public class Katalog extends AppCompatActivity {
 //            valuesId[i] = Integer.parseInt(list.get(i)[0]);
 //            values.add(list.get(i)[1]);
 //        }
-        Soap soap = new Soap();
-        values = soap.getKatalog(sessionId);
+        soap = new Soap();
+        values = soap.getKatalog(this,id);
         if(values!=null && values.length>0){
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,values);
             this.listView.setAdapter(adapter);
@@ -101,7 +128,7 @@ public class Katalog extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.logout){
             Soap soap = new Soap();
-            if(soap.logout(sessionId)){
+            if(soap.logout(this,id)){
                 Intent i = new Intent(Katalog.this, Login.class);
                 startActivity(i);
                 finish();

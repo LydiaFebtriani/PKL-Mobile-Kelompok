@@ -89,7 +89,7 @@ public class Register extends Activity implements View.OnClickListener{
                 Log.d("Register str",str[0]+""+str[1]+""+str[2]+" "+password);
 
                 Soap soap = new Soap();
-                soap.register(email,nama,alamat,hp,password,produk);
+                soap.register(this,email,nama,alamat,hp,password,produk);
                 Log.d("Register password",tgl+" "+password);
 
 //                this.dh = new DataManipulator(this);
