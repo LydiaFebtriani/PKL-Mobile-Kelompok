@@ -25,11 +25,12 @@ public class Katalog extends AppCompatActivity {
     private ListView listView;
     //private int[] valuesId;
     private SharedPreferences sp;
-    //private int idUser;
+    private int idUser;
+    private String sessionId;
     private String[] values;
-    private String id;
     private SensorData sensorData;
     SharedPreferences.Editor ed;
+    private Connect con;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +41,20 @@ public class Katalog extends AppCompatActivity {
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         ed = this.sp.edit();
 
-        Connect con = new Connect();
-//        con.sync(this);
-        if(!sp.getString("sessionId","").isEmpty()){
-            this.id = sp.getString("sessionId","");
-        } else{
-            this.id = sp.getString("idUser","");
+        sessionId = sp.getString("sessionId","");
+        idUser = Integer.parseInt(sp.getString("idUser",""));
+        con = new Connect();
+        if(con.checkConnection(this)){
+            //Ada koneksi
+            Soap soap = new Soap();
+            soap.sync(this,sessionId,idUser);
         }
+//        con.sync(this);
+//        if(!sp.getString("sessionId","").isEmpty()){
+//            this.id = sp.getString("sessionId","");
+//        } else{
+//            this.id = sp.getString("idUser","");
+//        }
         /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
         if(sp.getString("sessionId","").isEmpty()){
             Connect con = new Connect();
@@ -110,7 +118,11 @@ public class Katalog extends AppCompatActivity {
 //            values.add(list.get(i)[1]);
 //        }
         soap = new Soap();
-        values = soap.getKatalog(this,id);
+        if(con.checkConnection(this)){
+            values = soap.getKatalog(this,sessionId);
+        } else{
+            values = soap.getKatalog(this,idUser+"");
+        }
         if(values!=null && values.length>0){
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,values);
             this.listView.setAdapter(adapter);
@@ -128,7 +140,7 @@ public class Katalog extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         if(item.getItemId() == R.id.logout){
             Soap soap = new Soap();
-            if(soap.logout(this,id)){
+            if(soap.logout(this,sessionId)){
                 Intent i = new Intent(Katalog.this, Login.class);
                 startActivity(i);
                 finish();

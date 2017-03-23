@@ -27,6 +27,7 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
     private String kuantitas;
     private String totalHarga;
 
+    private int idUser;
     private String sessionId;
     private String[] produk;
     private Soap soap = new Soap();
@@ -42,12 +43,13 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         ed = this.sp.edit();
 
+        sessionId = sp.getString("sessionId","");
+        idUser = Integer.parseInt(sp.getString("idUser",""));
         Connect con = new Connect();
-//        con.sync(this);
-        if(!sp.getString("sessionId","").isEmpty()){
-            this.sessionId = sp.getString("sessionId","");
-        } else{
-            this.sessionId = sp.getString("idUser","");
+        if(con.checkConnection(this)){
+            //Ada koneksi
+            Soap soap = new Soap();
+            soap.sync(this,sessionId,idUser);
         }
         /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
         if(sp.getString("sessionId","").isEmpty()){
@@ -132,7 +134,7 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
                                 SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
                                 String hariIni = df.format(c.getTime());
 //                                dh.insertTransaksi(sp.getInt("idUser",-1),sp.getInt("idProduk",-1),Integer.parseInt(kuantitas),totalHarga,hariIni);
-                                boolean res = soap.setAddTransaksi(getApplicationContext(),sessionId,namaProduk,hargaProduk,kuantitas,hariIni);
+                                boolean res = soap.setAddTransaksi(getApplicationContext(),sessionId,idUser,namaProduk,hargaProduk,kuantitas,hariIni);
                                 if(res){
                                     Log.d("Jual",res+" "+hariIni);
                                 }

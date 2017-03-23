@@ -29,7 +29,11 @@ public class Home extends AppCompatActivity {
         SharedPreferences.Editor ed = sp.edit();
 
         Connect con = new Connect();
-        String sessionId = null;
+        if(con.checkConnection(this)){
+            Soap soap = new Soap();
+            soap.sync(this,sp.getString("sessionId",""),Integer.parseInt(sp.getString("idUser","")));
+        }
+        /*String sessionId = null;
         int idUser = -1;
         if(!sp.getString("sessionId","").isEmpty()){
             sessionId = sp.getString("sessionId","");
@@ -73,7 +77,7 @@ public class Home extends AppCompatActivity {
 //            }
 //            soap.sync(this,sessionId,idUser);
 //        }
-
+*/
         Button katalog = (Button) findViewById(R.id.katalogButton);
         katalog.setOnClickListener(new View.OnClickListener(){
             @Override

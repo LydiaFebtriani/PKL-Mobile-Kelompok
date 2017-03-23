@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class Rekap extends AppCompatActivity {
 //    private DataManipulator dh;
     private SharedPreferences sp;
-//    private int idUser;
+    private int idUser;
     private int totalTransaksi;
     private String sessionId;
 
@@ -38,13 +38,20 @@ public class Rekap extends AppCompatActivity {
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         ed = this.sp.edit();
 
+        sessionId = sp.getString("sessionId","");
+        idUser = Integer.parseInt(sp.getString("idUser",""));
         Connect con = new Connect();
-//        con.sync(this);
-        if(!sp.getString("sessionId","").isEmpty()){
-            this.sessionId = sp.getString("sessionId","");
-        } else{
-            this.sessionId = sp.getString("idUser","");
+        if(con.checkConnection(this)){
+            //Ada koneksi
+            Soap soap = new Soap();
+            soap.sync(this,sessionId,idUser);
         }
+//        con.sync(this);
+//        if(!sp.getString("sessionId","").isEmpty()){
+//            this.sessionId = sp.getString("sessionId","");
+//        } else{
+//            this.sessionId = sp.getString("idUser","");
+//        }
         /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
         if(sp.getString("sessionId","").isEmpty()){
             Connect con = new Connect();

@@ -19,15 +19,21 @@ public class SplashKeluar extends Activity {
 
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         Connect con = new Connect();
-        String sessionId = null;
-        int idUser = -1;
-        if(sp.getString("sessionId","") != null){
-            sessionId = sp.getString("sessionId","");
+        if(con.checkConnection(this)){
+            //Ada koneksi
+            Soap soap = new Soap();
+            soap.sync(this,sp.getString("sessionId",""),Integer.parseInt(sp.getString("idUser","")));
         }
-        if(Integer.parseInt(sp.getString("idUser","")) != -1){
-            idUser = Integer.parseInt(sp.getString("idUser",""));
-        }
-        con.sync(this,sessionId,idUser);
+//        Connect con = new Connect();
+//        String sessionId = null;
+//        int idUser = -1;
+//        if(sp.getString("sessionId","") != null){
+//            sessionId = sp.getString("sessionId","");
+//        }
+//        if(Integer.parseInt(sp.getString("idUser","")) != -1){
+//            idUser = Integer.parseInt(sp.getString("idUser",""));
+//        }
+//        con.sync(this,sessionId,idUser);
         /*Soap soap = new Soap();
         DataManipulator dh = new DataManipulator(this);
         if(!sp.getString("sessionId","").isEmpty()){

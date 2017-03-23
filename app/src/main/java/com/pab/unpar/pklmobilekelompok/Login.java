@@ -69,34 +69,44 @@ public class Login extends Activity {
     public void onBackPressed(){}
 
     public boolean checkUser(String email, String password){
+        boolean res = false;
         Soap soap = new Soap();
         String[] id =soap.login(this,email,password);
 
         SharedPreferences.Editor ed = sp.edit();
         ed.clear();
         ed.commit();
-        if(id[0] != null) {
-            if (id.length == 1) {
+        if(id[0] != null || id[1] != null) {
+            if (id[0] != null) {
+                //Ada sessionId
                 ed.putString("sessionId", id[0]);
                 ed.putString("user", email);
                 ed.commit();
-                Log.d("Session Id", id[0]);
-                return true;
-            } else if (id.length == 3) {
-                ed.putString("idUser", id[0]);
-                ed.putString("user", id[1]);
-                ed.putString("password", id[2]);
+                Log.d("Login with connection", id[0]+" "+id[1]+" "+id[2]+" "+id[3]);
+                res = true;
+            } else{
+                //Kalau offline
+                ed.putString("sessionId", "");
+                ed.putString("user", email);
                 ed.commit();
-                Log.d("Login no connection", id[0]+" "+id[1]+" "+id[2]);
-                return true;
+                Log.d("Login no connection", id[0]+" "+id[1]+" "+id[2]+" "+id[3]);
             }
-            else{
-                return false;
+
+            if (id[1] != null) {
+                ed.putString("idUser", id[1]);
+                ed.putString("user", id[2]);
+                ed.putString("password", id[3]);
+                ed.commit();
+                Log.d("Login no connection", id[0]+" "+id[1]+" "+id[2]+" "+id[3]);
+                res = true;
             }
+//            else{
+//                return false;
+//            }
         }
-        else{
-            return false;
-        }
+//        else{
+//            return false;
+//        }
 //        dh = new DataManipulator(this);
 //        String[] select = dh.select1User(email,password);
 //        if(select[0] != null){
@@ -108,6 +118,7 @@ public class Login extends Activity {
 //        else{
 //            return false;
 //        }
+        return res;
     }
 
 }

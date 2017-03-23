@@ -24,11 +24,13 @@ public class Transaksi extends AppCompatActivity {
     private ListView listView;
     //private int[] valuesId;
     private SharedPreferences sp;
-    //private int idUser;
+    private int idUser;
     private String[] values;
     private String sessionId;
     private SensorData sensorData;
     SharedPreferences.Editor ed;
+    private Soap soap;
+    private Connect con;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +41,20 @@ public class Transaksi extends AppCompatActivity {
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         ed = this.sp.edit();
 
-        Connect con = new Connect();
-//        con.sync(this);
-        if(!sp.getString("sessionId","").isEmpty()){
-            this.sessionId = sp.getString("sessionId","");
-        } else{
-            this.sessionId = sp.getString("idUser","");
+        sessionId = sp.getString("sessionId","");
+        idUser = Integer.parseInt(sp.getString("idUser",""));
+        con = new Connect();
+        if(con.checkConnection(this)){
+            //Ada koneksi
+            soap = new Soap();
+            soap.sync(this,sessionId,idUser);
         }
+//        con.sync(this);
+//        if(!sp.getString("sessionId","").isEmpty()){
+//            this.sessionId = sp.getString("sessionId","");
+//        } else{
+//            this.sessionId = sp.getString("idUser","");
+//        }
         /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
         if(sp.getString("sessionId","").isEmpty()){
             Connect con = new Connect();
@@ -109,8 +118,12 @@ public class Transaksi extends AppCompatActivity {
 //            valuesId[i] = Integer.parseInt(list.get(i)[0]);
 //            values[i] = list.get(i)[1];
 //        }
-        Soap soap = new Soap();
-        values = soap.getKatalog(this,sessionId);
+        soap = new Soap();
+        if(con.checkConnection(this)) {
+            values = soap.getKatalog(this,sessionId);
+        }else{
+            values = soap.getKatalog(this,idUser+"");
+        }
         if(values!=null){
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,values);
             listView.setAdapter(adapter);

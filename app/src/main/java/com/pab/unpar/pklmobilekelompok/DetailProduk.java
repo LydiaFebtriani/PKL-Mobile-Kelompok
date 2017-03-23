@@ -15,7 +15,7 @@ public class DetailProduk extends AppCompatActivity implements View.OnClickListe
 //    private DataManipulator dh;
     private SharedPreferences sp;
     private SharedPreferences.Editor ed;
-    //private int idUser;
+    private int idUser;
     private String sessionId;
     private String[] produk;
     private Soap soap = new Soap();
@@ -27,24 +27,33 @@ public class DetailProduk extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_detail_produk);
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         ed = this.sp.edit();
-        Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
-        if(sp.getString("sessionId","").isEmpty()){
-            Connect con = new Connect();
-            String temp = con.loginServer(this,sp.getString("user",""),sp.getString("password",""));
-            Log.d("Katalog temp",temp);
-            if(temp != ""){
-                //Kalau bisa login
-                ed = sp.edit();
-                ed.putString("sessionId", sessionId);
-                ed.commit();
-                this.sessionId = sp.getString("sessionId","");
-                Log.d("Connect di Katalog", sp.getString("sessionId",""));
-            }
-            this.sessionId = sp.getString("idUser","");
+
+        sessionId = sp.getString("sessionId","");
+        idUser = Integer.parseInt(sp.getString("idUser",""));
+        Connect con = new Connect();
+        if(con.checkConnection(this)){
+            //Ada koneksi
+            Soap soap = new Soap();
+            soap.sync(this,sessionId,idUser);
         }
-        else{
-            this.sessionId = sp.getString("sessionsessionId","");
-        }
+//        Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
+//        if(sp.getString("sessionId","").isEmpty()){
+//            Connect con = new Connect();
+//            String temp = con.loginServer(this,sp.getString("user",""),sp.getString("password",""));
+//            Log.d("Katalog temp",temp);
+//            if(temp != ""){
+//                //Kalau bisa login
+//                ed = sp.edit();
+//                ed.putString("sessionId", sessionId);
+//                ed.commit();
+//                this.sessionId = sp.getString("sessionId","");
+//                Log.d("Connect di Katalog", sp.getString("sessionId",""));
+//            }
+//            this.sessionId = sp.getString("idUser","");
+//        }
+//        else{
+//            this.sessionId = sp.getString("sessionsessionId","");
+//        }
 //        this.sessionId = sp.getString("sessionId","");
 
         Button batal = (Button) findViewById(R.id.buttonBatal);
@@ -85,7 +94,7 @@ public class DetailProduk extends AppCompatActivity implements View.OnClickListe
 
 //                dh = new DataManipulator(this);
 //                dh.update1FromProduk(sp.getInt("idProduk",-1),nama.getText().toString(),hargaPokok.getText().toString(),hargaJual.getText().toString(),this.idUser);
-                boolean res = soap.setAddProduk(this,sessionId,nama.getText().toString(),hargaPokok.getText().toString(),hargaJual.getText().toString());
+                boolean res = soap.setAddProduk(this,sessionId,idUser,nama.getText().toString(),hargaPokok.getText().toString(),hargaJual.getText().toString());
                 Log.d("Update produk",res+"");
                 if(res) {
                     Toast.makeText(getApplicationContext(), "Produk berhasil diupdate", Toast.LENGTH_SHORT).show();

@@ -16,7 +16,7 @@ import android.widget.Toast;
 public class Tambah extends AppCompatActivity implements View.OnClickListener{
 //    private DataManipulator dh;
     private SharedPreferences sp;
-//    private int idUser;
+    private int idUser;
     private String sessionId;
     private SensorData sensorData;
     SharedPreferences.Editor ed;
@@ -30,13 +30,20 @@ public class Tambah extends AppCompatActivity implements View.OnClickListener{
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         ed = this.sp.edit();
 
+        sessionId = sp.getString("sessionId","");
+        idUser = Integer.parseInt(sp.getString("idUser",""));
         Connect con = new Connect();
-//        con.sync(this);
-        if(!sp.getString("sessionId","").isEmpty()){
-            this.sessionId = sp.getString("sessionId","");
-        } else{
-            this.sessionId = sp.getString("idUser","");
+        if(con.checkConnection(this)){
+            //Ada koneksi
+            Soap soap = new Soap();
+            soap.sync(this,sessionId,idUser);
         }
+//        con.sync(this);
+//        if(!sp.getString("sessionId","").isEmpty()){
+//            this.sessionId = sp.getString("sessionId","");
+//        } else{
+//            this.sessionId = sp.getString("idUser","");
+//        }
         /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");
         if(sp.getString("sessionId","").isEmpty()){
             Connect con = new Connect();
@@ -84,7 +91,7 @@ public class Tambah extends AppCompatActivity implements View.OnClickListener{
 //                dh.insertProduk(nama,hargaPokok,hargaJual,this.idUser);
 
                 Soap soap = new Soap();
-                boolean res = soap.setAddProduk(this,sessionId,nama,hargaPokok,hargaJual);
+                boolean res = soap.setAddProduk(this,sessionId,idUser,nama,hargaPokok,hargaJual);
                 if(res){
                     Toast.makeText(getApplicationContext(),"Produk berhasil ditambahkan!",Toast.LENGTH_SHORT).show();
                     i = new Intent(Tambah.this, Katalog.class);
