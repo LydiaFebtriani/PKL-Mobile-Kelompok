@@ -145,6 +145,11 @@ public class Transaksi extends AppCompatActivity {
             startActivity(i);
             finish();
         }
+        else if(item.getItemId() == R.id.settings){
+            Intent i = new Intent(Transaksi.this, Pengaturan.class);
+            startActivity(i);
+            finish();
+        }
         else{
             Intent i = new Intent(Transaksi.this, SplashKeluar.class);
             startActivity(i);
