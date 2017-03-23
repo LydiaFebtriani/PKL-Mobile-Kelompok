@@ -137,6 +137,11 @@ public class Home extends AppCompatActivity {
             startActivity(i);
             finish();
         }
+        else if(item.getItemId() == R.id.settings){
+            Intent i = new Intent(Home.this, Pengaturan.class);
+            startActivity(i);
+            finish();
+        }
         return true;
     }
 
