@@ -13,6 +13,7 @@ public class SensorData implements SensorEventListener {
     private Activity activity;
     private SensorManager manager;
     private Sensor sensor;
+    private SharedPreferences sp;
 
     public SensorData(Activity activity, SensorManager manager){
         this.activity=activity;
@@ -20,22 +21,25 @@ public class SensorData implements SensorEventListener {
         this.manager=manager;
         sensor=manager.getDefaultSensor(Sensor.TYPE_LIGHT);
         manager.registerListener(this,sensor,SensorManager.SENSOR_DELAY_NORMAL);
+        sp=activity.getSharedPreferences("dataProduk",Context.MODE_PRIVATE);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float val=event.values[0];
-        if(val<100){
-            Utils.changeToTheme(activity, Utils.THEME_DEFAULT_BLACK);
-            SharedPreferences.Editor ed=activity.getSharedPreferences("dataProduk", Context.MODE_PRIVATE).edit();
-            ed.putString("themeCode", Utils.THEME_DEFAULT_BLACK + "");
-            ed.commit();
-        }
-        else{
-            Utils.changeToTheme(activity, Utils.THEME_DEFAULT_WHITE);
-            SharedPreferences.Editor ed=activity.getSharedPreferences("dataProduk", Context.MODE_PRIVATE).edit();
-            ed.putString("themeCode", Utils.THEME_DEFAULT_WHITE + "");
-            ed.commit();
+        if(sp.getBoolean("useSensor",false)){
+            if(val<100){
+                Utils.changeToTheme(activity, Utils.THEME_DEFAULT_BLACK);
+                SharedPreferences.Editor ed=activity.getSharedPreferences("dataProduk", Context.MODE_PRIVATE).edit();
+                ed.putString("themeCode", Utils.THEME_DEFAULT_BLACK + "");
+                ed.commit();
+            }
+            else{
+                Utils.changeToTheme(activity, Utils.THEME_DEFAULT_WHITE);
+                SharedPreferences.Editor ed=activity.getSharedPreferences("dataProduk", Context.MODE_PRIVATE).edit();
+                ed.putString("themeCode", Utils.THEME_DEFAULT_WHITE + "");
+                ed.commit();
+            }
         }
         Log.d("Cahaya",val+"");
     }
