@@ -24,10 +24,15 @@ public class Tambah extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
+        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        if (sp.getBoolean("useSensor", false)) {
+            sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+        }
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_tambah);
-        sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
+
         ed = this.sp.edit();
 
         sessionId = sp.getString("sessionId","");
@@ -74,6 +79,7 @@ public class Tambah extends AppCompatActivity implements View.OnClickListener{
         Intent i;
         switch (view.getId()){
             case R.id.buttonBatal:
+                sensorData.unregisterSensor();
                 i = new Intent(Tambah.this, Katalog.class);
                 startActivity(i);
                 finish();
@@ -94,6 +100,7 @@ public class Tambah extends AppCompatActivity implements View.OnClickListener{
                 boolean res = soap.setAddProduk(this,sessionId,idUser,nama,hargaPokok,hargaJual);
                 if(res){
                     Toast.makeText(getApplicationContext(),"Produk berhasil ditambahkan!",Toast.LENGTH_SHORT).show();
+                    sensorData.unregisterSensor();
                     i = new Intent(Tambah.this, Katalog.class);
                     startActivity(i);
                     finish();

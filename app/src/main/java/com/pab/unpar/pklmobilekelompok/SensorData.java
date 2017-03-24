@@ -44,4 +44,10 @@ public class SensorData implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    public void unregisterSensor() {
+        manager.unregisterListener(this);
+        Log.d("Sensor", "Unregistered");
+    }
+
 }

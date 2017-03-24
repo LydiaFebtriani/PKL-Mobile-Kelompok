@@ -32,10 +32,15 @@ public class Rekap extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
+        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        if (sp.getBoolean("useSensor", false)) {
+            sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+        }
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_rekap);
-        sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
+
         ed = this.sp.edit();
 
         sessionId = sp.getString("sessionId","");

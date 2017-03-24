@@ -35,10 +35,15 @@ public class Katalog extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
+        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        if (sp.getBoolean("useSensor", false)) {
+            sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+        }
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_katalog);
-        sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
+
         ed = this.sp.edit();
 
         sessionId = sp.getString("sessionId","");
@@ -78,6 +83,7 @@ public class Katalog extends AppCompatActivity {
         tambah.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                sensorData.unregisterSensor();
                 Intent intent = new Intent(Katalog.this, Tambah.class);
                 startActivity(intent);
             }
@@ -95,6 +101,7 @@ public class Katalog extends AppCompatActivity {
                     ed.commit();
                     Log.d("Katalog, produk",values[itemPosition]);
 
+                    sensorData.unregisterSensor();
                     Intent i = new Intent(Katalog.this, DetailProduk.class);
                     startActivity(i);
                 }
@@ -141,6 +148,7 @@ public class Katalog extends AppCompatActivity {
         if(item.getItemId() == R.id.logout){
             Soap soap = new Soap();
             if(soap.logout(this,sessionId)){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Katalog.this, Login.class);
                 startActivity(i);
                 finish();
@@ -150,16 +158,19 @@ public class Katalog extends AppCompatActivity {
             }
         }
         else if(item.getItemId() == R.id.menuhome){
+            sensorData.unregisterSensor();
             Intent i = new Intent(Katalog.this, Home.class);
             startActivity(i);
             finish();
         }
         else if(item.getItemId() == R.id.settings){
+            sensorData.unregisterSensor();
             Intent i = new Intent(Katalog.this, Pengaturan.class);
             startActivity(i);
             finish();
         }
         else{
+            sensorData.unregisterSensor();
             Intent i = new Intent(Katalog.this, SplashKeluar.class);
             startActivity(i);
             finish();

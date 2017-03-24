@@ -1,6 +1,8 @@
 package com.pab.unpar.pklmobilekelompok;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -19,13 +21,20 @@ public class DetailProduk extends AppCompatActivity implements View.OnClickListe
     private String sessionId;
     private String[] produk;
     private Soap soap = new Soap();
+    private SensorData sensorData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        if (sp.getBoolean("useSensor", false)) {
+            sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+        }
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_detail_produk);
-        sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
+
         ed = this.sp.edit();
 
         sessionId = sp.getString("sessionId","");
@@ -83,11 +92,13 @@ public class DetailProduk extends AppCompatActivity implements View.OnClickListe
         Intent i;
         switch (v.getId()){
             case R.id.buttonBatal:
+                sensorData.unregisterSensor();
                 i = new Intent(DetailProduk.this, Katalog.class);
                 startActivity(i);
                 finish();
                 break;
             case R.id.buttonSimpan:
+                sensorData.unregisterSensor();
                 EditText nama = (EditText) findViewById(R.id.detailNamaProduk);
                 EditText hargaPokok = (EditText) findViewById(R.id.detailHargaPokok);
                 EditText hargaJual = (EditText) findViewById(R.id.detailHargaJual);
@@ -98,7 +109,7 @@ public class DetailProduk extends AppCompatActivity implements View.OnClickListe
                 Log.d("Update produk",res+"");
                 if(res) {
                     Toast.makeText(getApplicationContext(), "Produk berhasil diupdate", Toast.LENGTH_SHORT).show();
-
+                    sensorData.unregisterSensor();
                     i = new Intent(DetailProduk.this, Katalog.class);
                     startActivity(i);
                     finish();
