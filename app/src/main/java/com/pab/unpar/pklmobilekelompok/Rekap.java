@@ -29,12 +29,17 @@ public class Rekap extends AppCompatActivity {
     private SensorData sensorData;
     SharedPreferences.Editor ed;
 
+    private TextView viewTotalTransaksi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_rekap);
+
+        viewTotalTransaksi = (TextView) findViewById(R.id.totalTransaksi);
+
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         ed = this.sp.edit();
 
@@ -97,10 +102,11 @@ public class Rekap extends AppCompatActivity {
     private void printRekap(){
 //        dh = new DataManipulator(this);
 //        List<String[]> list = dh.selectAllTransaksi(this.idUser);
+        totalTransaksi = 0;
         Soap soap = new Soap();
         Log.d("Rekap","Sebelum rekap");
         //<BUAT PENGELOPOKKAN REKAP, BELUM DICOBA>
-        ArrayList<String[]> list = soap.getRekap1Bulan(this,sessionId,idxBulan);
+        ArrayList<String[]> list = soap.getAllRekap(this,sessionId,idxBulan);
         Log.d("Rekap","Setelah rekap");
 
         TableRow row;
@@ -163,7 +169,6 @@ public class Rekap extends AppCompatActivity {
 
             tl.addView(row);
         }
-        TextView viewTotalTransaksi = (TextView) findViewById(R.id.totalTransaksi);
         viewTotalTransaksi.setText(this.totalTransaksi+"");
     }
 }
