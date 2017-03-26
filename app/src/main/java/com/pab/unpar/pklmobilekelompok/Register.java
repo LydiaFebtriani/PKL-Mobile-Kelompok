@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import java.util.Calendar;
+
+import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,12 +27,19 @@ public class Register extends Activity implements View.OnClickListener{
     private int year, month, day;
     private String password;
 
+    private SensorData sensorData;
+    private SharedPreferences sp;
+
     private DataManipulator dh;
     static final int DIALOG_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_register);
 
@@ -55,6 +66,7 @@ public class Register extends Activity implements View.OnClickListener{
         Intent i;
         switch(v.getId()){
             case R.id.buttonBatalRegister:
+                sensorData.unregisterSensor();
                 i = new Intent(this, Login.class);
                 startActivity(i);
                 finish();

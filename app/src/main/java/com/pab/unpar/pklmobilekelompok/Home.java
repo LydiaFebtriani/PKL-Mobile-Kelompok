@@ -3,6 +3,8 @@ package com.pab.unpar.pklmobilekelompok;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,15 +19,20 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class Home extends AppCompatActivity {
+
     private SharedPreferences sp;
+    private SensorData sensorData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_home);
 
-        sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         SharedPreferences.Editor ed = sp.edit();
 
         Connect con = new Connect();
@@ -82,6 +89,7 @@ public class Home extends AppCompatActivity {
         katalog.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Home.this, Katalog.class);
                 startActivity(i);
             }
@@ -91,6 +99,7 @@ public class Home extends AppCompatActivity {
         transaksi.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Home.this, Transaksi.class);
                 startActivity(i);
             }
@@ -100,6 +109,7 @@ public class Home extends AppCompatActivity {
         tmbhProduk.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Home.this, Tambah.class);
                 startActivity(i);
             }
@@ -109,6 +119,7 @@ public class Home extends AppCompatActivity {
         rekap.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Home.this, Rekap.class);
                 startActivity(i);
             }
@@ -128,6 +139,7 @@ public class Home extends AppCompatActivity {
             String sessionId = sp.getString("sessionId","");
             Soap soap = new Soap();
             if(soap.logout(this,sessionId)){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Home.this, Login.class);
                 startActivity(i);
                 finish();
@@ -137,11 +149,13 @@ public class Home extends AppCompatActivity {
             }
         }
         else if(item.getItemId() == R.id.keluar){
+            sensorData.unregisterSensor();
             Intent i = new Intent(Home.this, SplashKeluar.class);
             startActivity(i);
             finish();
         }
         else if(item.getItemId() == R.id.settings){
+            sensorData.unregisterSensor();
             Intent i = new Intent(Home.this, Pengaturan.class);
             startActivity(i);
             finish();

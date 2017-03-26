@@ -35,10 +35,14 @@ public class Transaksi extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
+        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+        
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_transaksi);
-        sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
+
         ed = this.sp.edit();
 
         sessionId = sp.getString("sessionId","");
@@ -78,6 +82,7 @@ public class Transaksi extends AppCompatActivity {
         rekap.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Transaksi.this, Rekap.class);
                 startActivity(i);
             }
@@ -96,6 +101,7 @@ public class Transaksi extends AppCompatActivity {
                     ed.commit();
                     Log.d("Transaksi, produk",values[itemPosition]);
 
+                    sensorData.unregisterSensor();
                     Intent i = new Intent(Transaksi.this, Jual.class);
                     startActivity(i);
                 }
@@ -145,6 +151,7 @@ public class Transaksi extends AppCompatActivity {
 //            finish();
             Soap soap = new Soap();
             if(soap.logout(this,sessionId)){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Transaksi.this, Login.class);
                 startActivity(i);
                 finish();
@@ -154,22 +161,24 @@ public class Transaksi extends AppCompatActivity {
             }
         }
         else if(item.getItemId() == R.id.menuhome){
+            sensorData.unregisterSensor();
             Intent i = new Intent(Transaksi.this, Home.class);
             startActivity(i);
             finish();
         }
         else if(item.getItemId() == R.id.settings){
+            sensorData.unregisterSensor();
             Intent i = new Intent(Transaksi.this, Pengaturan.class);
             startActivity(i);
             finish();
         }
         else{
+            sensorData.unregisterSensor();
             Intent i = new Intent(Transaksi.this, SplashKeluar.class);
             startActivity(i);
             finish();
         }
         return true;
     }
-
 
 }

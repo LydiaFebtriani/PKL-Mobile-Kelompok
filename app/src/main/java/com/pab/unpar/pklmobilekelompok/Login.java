@@ -23,8 +23,10 @@ public class Login extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
         sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_login);
 
@@ -36,6 +38,7 @@ public class Login extends Activity {
             public void onClick(View arg0){
                 if(checkUser(edUserName.getText().toString(),edPassword.getText().toString())){
                     Toast.makeText(getApplicationContext(),"Login berhasil",Toast.LENGTH_SHORT).show();
+                    sensorData.unregisterSensor();
                     Intent i = new Intent(Login.this, Home.class);
                     startActivity(i);
                     finish();
@@ -50,6 +53,7 @@ public class Login extends Activity {
         register.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Login.this, Register.class);
                 startActivity(i);
             }
@@ -59,6 +63,7 @@ public class Login extends Activity {
         keluar.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0){
+                sensorData.unregisterSensor();
                 Intent i = new Intent(Login.this, SplashKeluar.class);
                 startActivity(i);
             }

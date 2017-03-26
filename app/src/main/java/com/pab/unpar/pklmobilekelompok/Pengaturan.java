@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 public class Pengaturan extends AppCompatActivity {
 
     private Button editWarna, editPass, back;
+    private CheckBox useSensor;
 
     private SharedPreferences sp;
     private SharedPreferences.Editor ed;
@@ -29,11 +32,13 @@ public class Pengaturan extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
+        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_pengaturan);
 
-        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
         ed = sp.edit();
 
         editWarna = (Button) findViewById(R.id.buttonUbahWarna);
@@ -70,6 +75,34 @@ public class Pengaturan extends AppCompatActivity {
 
         });
 
+        useSensor = (CheckBox) findViewById(R.id.cbSensorCahaya);
+        if (sp.contains("useSensor") && sp.getBoolean("useSensor", false)) {
+            useSensor.setChecked(true);
+        } else {
+            useSensor.setChecked(false);
+        }
+
+        useSensor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                boolean use;
+                if (isChecked) {
+                    sensorData = new SensorData(Pengaturan.this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+                    use = true;
+                } else {
+                    sensorData.unregisterSensor();
+                    use = false;
+                }
+                ed.putBoolean("useSensor", use);
+                ed.commit();
+                Log.d("Use Sensor", use + "");
+                sensorData.unregisterSensor();
+                Intent i = new Intent(Pengaturan.this, Pengaturan.class);
+                startActivity(i);
+            }
+
+        });
+
     }
 
     private void showPopUpEditWarna() {
@@ -77,18 +110,19 @@ public class Pengaturan extends AppCompatActivity {
         builder = new AlertDialog.Builder(Pengaturan.this);
         view = getLayoutInflater().inflate(R.layout.activity_ubahwarna, null);
 
-        TextView def, gray, green, blue;
+        TextView def, gray, green, blue, black;
 
         def = (TextView) view.findViewById(R.id.warnaDefault);
         gray = (TextView) view.findViewById(R.id.warnaAbuAbu);
         green = (TextView) view.findViewById(R.id.warnaHijau);
         blue = (TextView) view.findViewById(R.id.warnaBiru);
+        black = (TextView) view.findViewById(R.id.warnaHitam);
 
         def.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                changeTheme(Utils.THEME_DEFAULT);
+                changeTheme(Utils.THEME_DEFAULT_WHITE);
             }
 
         });
@@ -116,6 +150,15 @@ public class Pengaturan extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 changeTheme(Utils.THEME_BLUE);
+            }
+
+        });
+
+        black.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                changeTheme(Utils.THEME_DEFAULT_BLACK);
             }
 
         });

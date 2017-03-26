@@ -37,10 +37,13 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sensorData=new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
+        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
+        sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
+
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_jual);
-        sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
+
         ed = this.sp.edit();
 
         sessionId = sp.getString("sessionId","");
@@ -97,10 +100,12 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
         Intent i;
         switch (v.getId()){
             case R.id.buttonBatal:
+                sensorData.unregisterSensor();
                 i = new Intent(Jual.this, Transaksi.class);
                 startActivity(i);
                 break;
             case R.id.buttonProses:
+                sensorData.unregisterSensor();
                 View kuantitasJual = (View) findViewById(R.id.jualKuantitas);
                 View nama = (View) findViewById(R.id.jualNamaProduk);
                 View hargaJual = (View) findViewById(R.id.jualHargaJual);

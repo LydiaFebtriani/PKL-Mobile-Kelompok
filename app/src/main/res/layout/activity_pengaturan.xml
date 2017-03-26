@@ -27,10 +27,11 @@
         android:text="Kembali"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="35dp"
         android:id="@+id/buttonKembaliPengaturan"
-        android:layout_below="@+id/buttonUbahPass"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/cbSensorCahaya"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:text="Pengaturan"
@@ -42,6 +43,19 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <CheckBox
+        android:id="@+id/cbSensorCahaya"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Gunakan sensor cahaya"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/buttonUbahPass"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp" />
 
 
 </RelativeLayout>
