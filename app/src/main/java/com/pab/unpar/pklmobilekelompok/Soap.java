@@ -427,23 +427,21 @@ public class Soap extends Activity {
                         //<TAMBAHAN PENGELOMPOKKAN REKAP>
                         if(bulan>0){
                             //String blnTemp= bulan+"";//String.format("%02d",bulan);
+                            Log.d("Filter check",""+res[3].substring(4,6).equals(strBulan));
                             if(res[3]!=null&&res[3].length()>6&&res[3].substring(4,6).equals(strBulan)){
                                 list.add(idx,res);
-                            }
-                            else if(Integer.parseInt(res[3].substring(4,6))>bulan){
-                                //Kalau sudah melewati bulan langsung keluar
-                                break;
+                                idx++;
                             }
                         }
                         else{
                             list.add(idx,res);
+                            idx++;
                         }
                         //</TAMBAHAN PENGELOMPOKKAN REKAP>
-                        idx++;
                         res = new String[4];
 
                         Log.d("Rekap Array",res[0]+" "+res[1]+" "+res[2]+" "+res[3]);
-                        Log.d("Rekap List",list.get(idx-1)[0]);
+//                        Log.d("Rekap List",list.get(idx-1)[0]);
                     }
                 }
             }
