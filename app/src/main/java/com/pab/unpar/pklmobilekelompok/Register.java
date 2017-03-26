@@ -38,9 +38,7 @@ public class Register extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
 
         sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
-        if (sp.getBoolean("useSensor", false)) {
-            sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
-        }
+        sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
 
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_register);
