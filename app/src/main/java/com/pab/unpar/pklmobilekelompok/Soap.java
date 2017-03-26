@@ -342,6 +342,7 @@ public class Soap extends Activity {
             return true;
         }
 //        }
+        result = null;
         return false;
     }
 
@@ -377,17 +378,21 @@ public class Soap extends Activity {
             int idProduk = Integer.parseInt(dh.select1FromProduk(new String[]{"idUser = \""+idUser+"\" AND","namaProduk = \""+namaProduk+"\""})[0]);
             if(dh.insertTransaksi(idUser, idProduk, Integer.parseInt(qty),hargaJual, tglJual, false) != -1) return true;
 //        }
+        result = null;
         return false;
     }
 
     //******************** METHOD UNTUK MENDAPATKAN REKAP TRANSAKSI ********************//
     /* OUTPUT: list=(String[]{"namaproduk","hargajual","qtyjual","tgljual"}),(...) */
-    public ArrayList<String[]> getAllRekap(Context context, String sessionId){
+    public ArrayList<String[]> getAllRekap(Context context, String sessionId, int bulan){
         ArrayList<String[]> list = new ArrayList<String[]>();
+        String strBulan = String.format("%02d",bulan);
 
         request = new SoapObject(NAMESPACE, "gettransaksi");
         request.addProperty("sid",sessionId);
-        request.addProperty("tgldari","20170101");
+        if(bulan>0) request.addProperty("tgldari","2017"+strBulan+"01");
+        else request.addProperty("tgldari","20170101");
+        Log.d("Rekap bulan",strBulan+" "+bulan);
 
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(request);
@@ -396,59 +401,7 @@ public class Soap extends Activity {
         int time = tunggu();
 
         if(time<TIMEOUT){
-            if(result!=null){
-                String[] temp = result.split(",");
-                String[] res = new String[4];
-                int idx =0 ;
-                int ct =0;
-                for(int i=0;i<temp.length;i++){
-                    //temp[i] = temp[i].substring(1,temp[i].length()-1);
-                    if(i%4 == 0){
-                        temp[i] = temp[i].substring(1);
-                    } else if((i+1)%4 == 0){
-                        temp[i] = temp[i].substring(0,temp[i].length()-1);
-                    }
-                    Log.d("Rekap 1",temp[i]);
-                    temp[i] = temp[i].substring(1,temp[i].length()-1);
-                    Log.d("Rekap 2",temp[i]);
-
-                    if(ct<3){
-                        res[ct] = temp[i];
-                        ct++;
-                    } else{
-                        res[ct] = temp[i];
-                        ct=0;
-                        list.add(idx,res);
-                        idx++;
-                        res = new String[4];
-
-                        Log.d("Array rekap",res[0]+" "+res[1]+" "+res[2]+" "+res[3]);
-                        Log.d("List rekap",list.get(idx-1)[0]);
-                    }
-                }
-            }
-        }
-        else{
-            dh = new DataManipulator(context);
-//            dh.
-        }
-        return list;
-    }
-    //Ada tambahan untuk pengelompokkan rekap
-    public ArrayList<String[]> getRekap1Bulan(Context context, String sessionId,int bulan){
-        ArrayList<String[]> list = new ArrayList<String[]>();
-
-        request = new SoapObject(NAMESPACE, "gettransaksi");
-        request.addProperty("sid",sessionId);
-        request.addProperty("tgldari","2017"+bulan+"01");
-
-        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.setOutputSoapObject(request);
-        NetworkHandler handler = new NetworkHandler("gettransaksi");
-        handler.execute();
-        int time = tunggu();
-
-        if(time<TIMEOUT){
+            Log.d("Rekap result",result);
             if(result!=null){
                 String[] temp = result.split(",");
                 String[] res = new String[4];
@@ -473,8 +426,8 @@ public class Soap extends Activity {
                         ct=0;
                         //<TAMBAHAN PENGELOMPOKKAN REKAP>
                         if(bulan>0){
-                            String blnTemp=String.format("%02d",bulan);
-                            if(res[3]!=null&&res[3].length()>6&&res[3].substring(4,6).equals(blnTemp)){
+                            //String blnTemp= bulan+"";//String.format("%02d",bulan);
+                            if(res[3]!=null&&res[3].length()>6&&res[3].substring(4,6).equals(strBulan)){
                                 list.add(idx,res);
                             }
                             else if(Integer.parseInt(res[3].substring(4,6))>bulan){
@@ -489,12 +442,18 @@ public class Soap extends Activity {
                         idx++;
                         res = new String[4];
 
-                        Log.d("Array rekap",res[0]+" "+res[1]+" "+res[2]+" "+res[3]);
-                        Log.d("List rekap",list.get(idx-1)[0]);
+                        Log.d("Rekap Array",res[0]+" "+res[1]+" "+res[2]+" "+res[3]);
+                        Log.d("Rekap List",list.get(idx-1)[0]);
                     }
                 }
             }
         }
+        else{
+            dh = new DataManipulator(context);
+            list = (ArrayList<String[]>) dh.selectAllTransaksi(new String[]{"idUser = \""+sessionId+"\""});
+            Log.d("Rekap dh size",list.size()+"");
+        }
+        result = null;
         return list;
     }
 
@@ -598,7 +557,7 @@ public class Soap extends Activity {
         //*Bagian memasukkan data transaksi dari webserver ke database*//
         list = dh.selectAllTransaksi(new String[]{"idUser = \""+ (idUser+"") +"\""});
         //Ambil transaksi dari webserver
-        ArrayList<String[]> transaksi = getAllRekap(context,sessionId);
+        ArrayList<String[]> transaksi = getAllRekap(context,sessionId,0);
         if(transaksi.size() > list.size()){
             for(int i=0;i<transaksi.size();i++){
                 //Ambil detail produk dari webserver
@@ -625,8 +584,6 @@ public class Soap extends Activity {
 //        syncDariWeb(context,sessionId,idUser);
 //        syncDariDB(context,sessionId,idUser);
         dh = new DataManipulator(context);
-        //Ambil profil pkl session tersebut
-        String[] pkl = getPklOnline(sessionId);
 
         //Search user baru / syncStatus == 0
         List<String[]> allUser = dh.selectAllUser(new String[]{"syncStatus = \""+0+"\""});
@@ -677,8 +634,20 @@ public class Soap extends Activity {
             }
         }
 
-
         //Masukin transaksi dari webserver ke database lokal
+        List<String[]> rekapWeb = getAllRekap(context,sessionId,0);
+        List<String[]> rekapDB = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\""});
+        Log.d("Sync rekap size",idUser+" "+rekapDB.size()+" "+rekapWeb.size());
+        if(rekapWeb.size() > rekapDB.size()){
+            int idxNext = rekapDB.size();
+            Log.d("Sync rekap size",rekapDB.size()+" "+rekapWeb.size());
+            while(idxNext<rekapWeb.size()){
+                String[] transaksi = rekapWeb.get(idxNext);
+                String idProduk = dh.select1FromProduk(new String[]{"namaProduk = \""+transaksi[0]+"\""})[0];
+                dh.insertTransaksi(idUser,Integer.parseInt(idProduk),Integer.parseInt(transaksi[2]),transaksi[1],transaksi[3],true);
+                idxNext++;
+            }
+        }
     }
 //    public void syncDariWeb(Context context, String sessionId, int idUser){
 //        String[] katalog = getKatalog(context,sessionId);
