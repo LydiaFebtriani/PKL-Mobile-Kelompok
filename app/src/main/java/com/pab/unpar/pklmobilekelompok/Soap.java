@@ -632,8 +632,9 @@ public class Soap extends Activity {
             }
         }
 
-        //Masukin transaksi dari webserver ke database lokal
+        /*//Masukin transaksi dari webserver ke database lokal
         List<String[]> rekapWeb = getAllRekap(context,sessionId,0);
+        //namaproduk","hargajual","qtyjual","tgljual"}
         List<String[]> rekapDB = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\""});
         Log.d("Sync rekap size",idUser+" "+rekapDB.size()+" "+rekapWeb.size());
         if(rekapWeb.size() > rekapDB.size()){
@@ -645,7 +646,7 @@ public class Soap extends Activity {
                 dh.insertTransaksi(idUser,Integer.parseInt(idProduk),Integer.parseInt(transaksi[2]),transaksi[1],transaksi[3],true);
                 idxNext++;
             }
-        }
+        }*/
     }
 //    public void syncDariWeb(Context context, String sessionId, int idUser){
 //        String[] katalog = getKatalog(context,sessionId);
