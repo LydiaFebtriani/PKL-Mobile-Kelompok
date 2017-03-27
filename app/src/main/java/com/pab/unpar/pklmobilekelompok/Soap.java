@@ -422,7 +422,6 @@ public class Soap extends Activity {
                 int idx =0 ;
                 int ct =0;
                 for(int i=0;i<temp.length;i++){
-                    //temp[i] = temp[i].substring(1,temp[i].length()-1);
                     if(i%4 == 0){
                         temp[i] = temp[i].substring(1);
                     } else if((i+1)%4 == 0){
@@ -632,9 +631,8 @@ public class Soap extends Activity {
         }
 
         /* SYNC DARI WEBSERVER KE DATABASE LOKAL */
-        //Masukin produk dari webserver ke database lokal
+        //Masukin produk
         String[] namaProdukWeb = getKatalog(context,sessionId);
-        //Ambil semua produk dari lokal
         allProduk = dh.selectAllProduk(new String[]{"idUser = \""+idUser+"\""});
         if(namaProdukWeb != null && !allProduk.isEmpty()){
             Log.d("Sync produk length",namaProdukWeb.length+" "+allProduk.size());
@@ -654,6 +652,31 @@ public class Soap extends Activity {
                 while(iWeb < namaProdukWeb.length){
                     String[] detailWeb = getDetailProduk(context,sessionId,namaProdukWeb[iWeb]);
                     dh.insertProduk(detailWeb[0],detailWeb[1],detailWeb[2],idUser,true);
+                    iWeb++;
+                }
+            }
+        }
+        //Masukin transaksi
+        ArrayList<String[]> transaksi = getAllRekap(context,sessionId,0);
+        allTransaksi = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\""});
+        if(!transaksi.isEmpty() && !allTransaksi.isEmpty()){
+            int iWeb = 0;
+            int iDB = 0;
+            while(iWeb < transaksi.size() && iDB < allTransaksi.size()){
+                String[] transaksiWeb = transaksi.get(iWeb);
+                String[] transaksiDB = allTransaksi.get(iDB);
+                String namaProduk = dh.select1FromProduk(new String[]{"idProduk = \""+transaksiDB[2]+"\""})[1];
+                if(transaksiWeb[0].equals(namaProduk) || transaksiWeb[1].equals(transaksiDB[4]) || transaksiWeb[2].equals(transaksiDB[5])){
+                    dh.update1Transaksi(Integer.parseInt(transaksiDB[0]),idUser,Integer.parseInt(transaksiDB[2]),Integer.parseInt(transaksiDB[3]),transaksiDB[4],transaksiDB[5],true);
+                }
+                iWeb++;
+                iDB++;
+            }
+            if(iWeb != transaksi.size()){
+                while(iWeb < transaksi.size()){
+                    String[] transaksiWeb = transaksi.get(iWeb);
+                    String idProduk = dh.select1FromProduk(new String[]{"namaProduk = \""+transaksiWeb[0]+"\""})[0];
+                    dh.insertTransaksi(idUser,Integer.parseInt(idProduk),Integer.parseInt(transaksiWeb[2]),transaksiWeb[1],transaksiWeb[3],true);
                     iWeb++;
                 }
             }
