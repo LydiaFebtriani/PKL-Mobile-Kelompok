@@ -1,14 +1,13 @@
 # PKL Mobile Kelompok
 
-Task list untuk project:
-- [x] Menyediakan halaman utama yang berisi button menuju Katalog, Transaksi, Tambah Produk, dan Rekap (Tampilan)
-- [x] Menghilangkan button-button yang tidak relevan dengan fungsi halaman dan memindahkannya ke menu navigasi (Tampilan)
+Task list untuk perbaikan project (utama):
 - [ ] Menambah fitur untuk mengganti password (Struktur data)
-- [x] Mengelompokkan hasil rekap berdasarkan bulan (Fitur tambahan)
-- [x] Menambah setting untuk tema (Fitur tambahan)
-- [x] Edit menu navigasi (isi menu ada home/beranda, logout, setting, keluar)
-- [x] Edit fungsi navigasi (di tiap halaman)
-- [x] \(optional) Penggunaan sensor untuk ganti tema
-- [x] Slide presentasi (google drive)
+- [ ] Pengecekan ulang sensor untuk tema
 - [ ] Logo aplikasi
 - [ ] Identitas kelompok di aplikasi
+- [ ] Perbaikan tampilan rekap (prioritas untuk yang bisa test di android beda-beda resolusi, tapi minimal bisa di 1 device)
+- [ ] Menurunkan tingkat intensitas cahaya untuk penggantian tema dengan sensor
+
+Task list sekunder (tidak wajib selesai, opsional):
+- [ ] Animasi saat tukar tema (pas pilih tema atau penggunaan sensor)
+- [ ] Memperpanjang waktu timeout
