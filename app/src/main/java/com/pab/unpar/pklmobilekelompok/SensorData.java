@@ -28,7 +28,7 @@ public class SensorData implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         float val=event.values[0];
         if(sp.getBoolean("useSensor",false)){
-            if(val<100){
+            if(val<10){
                 Utils.changeToTheme(activity, Utils.THEME_DEFAULT_BLACK);
                 SharedPreferences.Editor ed=activity.getSharedPreferences("dataProduk", Context.MODE_PRIVATE).edit();
                 ed.putString("themeCode", Utils.THEME_DEFAULT_BLACK + "");
