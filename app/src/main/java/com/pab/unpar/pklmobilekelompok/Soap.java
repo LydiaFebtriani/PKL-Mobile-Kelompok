@@ -28,17 +28,11 @@ public class Soap extends Activity {
     private DataManipulator dh;
 
     String result;
-    int TIMEOUT = 500;
-
-//    private SharedPreferences sp;
-//    private SharedPreferences.Editor se;
+    int TIMEOUT = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
-//        Log.d("SharedPreferences",sp.contains("sessionId")+"");
-//        se = sp.edit();
     }
     /*Output: user, nama, alamat, nohp, tgllahir, produkunggulan*/
     public String[] getPklOnline(String sessionId){
@@ -102,7 +96,7 @@ public class Soap extends Activity {
         int time = tunggu();
         Log.d("After while",result+"");
 
-        sessionId = new String[5];
+        sessionId = new String[4];
 
         dh = new DataManipulator(context);
         if(time<TIMEOUT){
@@ -348,7 +342,7 @@ public class Soap extends Activity {
         } else{
             //Kalau produk sudah ada, update
             dh.update1Produk(Integer.parseInt(produk[0]),namaProduk,hargaPokok,hargaJual,idUser,sync);
-            Log.d("Update produk ke DB", "Berhasil");
+            Log.d("Update produk ke DB", "Berhasil "+produk[0]+" "+produk[1]+" "+idUser+" "+sync);
             res = true;
         }
         result = null;
@@ -608,25 +602,31 @@ public class Soap extends Activity {
             }
         }
         //Search produk baru / syncStatus == 0
-        List<String[]> allProduk = dh.selectAllProduk(new String[]{"idUser = \""+idUser+"\" AND", "syncStatus = \""+0+"\""});
+        List<String[]> allProduk = dh.selectAllProduk(new String[]{"idUser = \""+idUser+"\""});
+        Log.d("Sync produk",idUser+" "+allProduk.isEmpty());
         if(!allProduk.isEmpty()){
             //Kalau ada produk baru
             for(int i=0;i<allProduk.size();i++){
                 String[] temp = allProduk.get(i);
-                setAddProduk(context,sessionId,idUser,temp[1],temp[2],temp[3]);
-                dh.update1ProdukStatus(Integer.parseInt(temp[0]),true);
+                if(temp[4].equals("false")){
+                    setAddProduk(context,sessionId,idUser,temp[1],temp[2],temp[3]);
+                    dh.update1ProdukStatus(Integer.parseInt(temp[0]),true);
+                    Log.d("Sync Produk",temp[0]+" "+temp[1]+" "+temp[2]+" "+temp[3]);
+                }
             }
         }
         //Search transaksi baru / syncStatus == 0
-        List<String[]> allTransaksi = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\" AND", "syncStatus = \""+0+"\""});
+        List<String[]> allTransaksi = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\""});
         if(!allTransaksi.isEmpty()){
             //Kalau ada transaksi bar
             for (int i=0;i<allTransaksi.size();i++){
                 String[] temp = allTransaksi.get(i);
-                //idTransaksi, idUser, idProduk, kuantitas, harga, tglJual,syncStatus
-                String namaProduk = dh.select1FromProduk(new String[]{"idProduk = \""+temp[2]+"\""})[1];
-                setAddTransaksi(context,sessionId,idUser,namaProduk,temp[4],temp[3],temp[5]);
-                dh.update1TransaksiStatus(Integer.parseInt(temp[0]),true);
+                if(temp[6].equals("false")){
+                    //idTransaksi, idUser, idProduk, kuantitas, harga, tglJual,syncStatus
+                    String namaProduk = dh.select1FromProduk(new String[]{"idProduk = \""+temp[2]+"\""})[1];
+                    setAddTransaksi(context,sessionId,idUser,namaProduk,temp[4],temp[3],temp[5]);
+                    dh.update1TransaksiStatus(Integer.parseInt(temp[0]),true);
+                }
             }
         }
 
@@ -636,6 +636,7 @@ public class Soap extends Activity {
         allProduk = dh.selectAllProduk(new String[]{"idUser = \""+idUser+"\""});
         if(namaProdukWeb != null && !allProduk.isEmpty()){
             Log.d("Sync produk length",namaProdukWeb.length+" "+allProduk.size());
+            Log.d("Sync produk 2",allProduk.get(1)[0]+" "+allProduk.get(1)[4]);
             int iWeb = 0;
             int iDB = 0;
             while(iWeb < namaProdukWeb.length && iDB < allProduk.size()){
@@ -643,7 +644,7 @@ public class Soap extends Activity {
                 String[] detailDB = allProduk.get(iDB);
                 if(!detailWeb[0].equals(detailDB[1]) || !detailWeb[1].equals(detailDB[2]) || !detailWeb[2].equals(detailDB[3])){
                     //Nama, harga pokok, harga jual ada yang tidak sama
-                    dh.update1Produk(Integer.parseInt(detailDB[0]),detailWeb[0],detailWeb[1],detailDB[2],idUser,true);
+                    dh.update1Produk(Integer.parseInt(detailDB[0]),detailWeb[0],detailWeb[1],detailWeb[2],idUser,true);
                 }
                 iWeb++;
                 iDB++;
