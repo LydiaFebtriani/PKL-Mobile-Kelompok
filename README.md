@@ -5,7 +5,7 @@ Task list untuk perbaikan project (utama):
 - [ ] Pengecekan ulang sensor untuk tema
 - [x] Logo aplikasi
 - [ ] Identitas kelompok di aplikasi
-- [ ] Perbaikan tampilan rekap (prioritas untuk yang bisa test di android beda-beda resolusi, tapi minimal bisa di 1 device)
+- [x] Perbaikan tampilan rekap (prioritas untuk yang bisa test di android beda-beda resolusi, tapi minimal bisa di 1 device)
 - [x] Menurunkan tingkat intensitas cahaya untuk penggantian tema dengan sensor
 
 Task list sekunder (tidak wajib selesai, opsional):
