@@ -167,6 +167,7 @@ public class Rekap extends AppCompatActivity {
             info.setWidth(225);
             info.setTextSize(16);
             info.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
             row.addView(info);
 
             qty.setText(kuantitas+" x "+harga);
