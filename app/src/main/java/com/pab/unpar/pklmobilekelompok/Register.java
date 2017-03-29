@@ -104,6 +104,17 @@ public class Register extends Activity implements View.OnClickListener{
                 soap.register(this,email,nama,alamat,hp,password,produk);
                 Log.d("Register password",tgl+" "+password);
 
+                //enkripsi password
+                String hashValue = "";
+                try {
+                    hashValue = Encoder.encrypt(password);
+                    Log.d("Password", password);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                //simpan nilai hashValue ke DB
+
 //                this.dh = new DataManipulator(this);
 //                this.dh.insertUser(email,password,nama,alamat,hp,tgl,produk);
 

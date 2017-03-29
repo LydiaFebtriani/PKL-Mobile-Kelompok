@@ -29,7 +29,6 @@ public class Pengaturan extends AppCompatActivity {
     private View view;
 
     private SensorData sensorData;
-    private Encoder encoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,6 @@ public class Pengaturan extends AppCompatActivity {
 
         sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
         sensorData = new SensorData(this,(SensorManager)getSystemService(Context.SENSOR_SERVICE));
-        encoder = new Encoder();
 
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_pengaturan);
@@ -212,23 +210,15 @@ public class Pengaturan extends AppCompatActivity {
 
                     String password = "contoh"; // "contoh" diganti jadi kode untuk ambil password saat ini dari server / DB
 
-                    String hashPwd = "hashPwd";
+                    String hashValue = "";
                     try {
-                        hashPwd = encoder.encrypt(password);
-                        Log.d("DB Password", hashPwd);
+                        hashValue = Encoder.encrypt(currPass.getText().toString());
+                        Log.d("Current Hash", hashValue);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    String hashCurrPwd = "hasCurrPwd";
-                    try {
-                        hashCurrPwd = encoder.encrypt(currPass.getText().toString());
-                        Log.d("Current Hash", hashCurrPwd);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    if (!hashCurrPwd.equals(hashPwd)) {
+                    if (!hashValue.equals(password)) {
                         currPass.setError("Password anda salah");
                     } else {
 
@@ -236,16 +226,16 @@ public class Pengaturan extends AppCompatActivity {
                             confNewPass.setError("Password konfirmasi berbeda");
                         } else {
 
-                            String hashNewPwd = "newPwd";
+                            String newHashValue = "";
                             try {
-                                hashNewPwd = encoder.encrypt(newPass.getText().toString());
-                                Log.d("New Password", hashNewPwd);
+                                newHashValue = Encoder.encrypt(newPass.getText().toString());
+                                Log.d("New Password", newHashValue);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
                             // diisi kode untuk simpan password baru ke server/ DB
-                            // passwordnya pake yang hashNewPwd
+                            // passwordnya pake yang newHashValue
 
                             Toast.makeText(getApplicationContext(), "Mengubah password",
                                     Toast.LENGTH_SHORT).show();

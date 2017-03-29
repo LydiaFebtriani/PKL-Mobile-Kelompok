@@ -37,8 +37,8 @@ public class Login extends Activity {
             @Override
             public void onClick(View arg0){
                 if(checkUser(edUserName.getText().toString(),edPassword.getText().toString())){
-                    Toast.makeText(getApplicationContext(),"Login berhasil",Toast.LENGTH_SHORT).show();
                     sensorData.unregisterSensor();
+                    Toast.makeText(getApplicationContext(),"Login berhasil",Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(Login.this, Home.class);
                     startActivity(i);
                     finish();
@@ -110,6 +110,18 @@ public class Login extends Activity {
 //        else{
 //            return false;
 //        }
+
+        //enkripsi password input
+        String hashValue = "";
+        try {
+            hashValue = Encoder.encrypt(edPassword.getText().toString());
+            Log.d("New Password", hashValue);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //ambil password dari DB
+        //bandingingin sama nilai hashValue
+
 //        dh = new DataManipulator(this);
 //        String[] select = dh.select1User(email,password);
 //        if(select[0] != null){

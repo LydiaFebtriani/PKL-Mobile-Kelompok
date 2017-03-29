@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class Encoder {
 
-    public synchronized String encrypt(String plaintext) throws Exception {
+    public static synchronized String encrypt(String plaintext) throws Exception {
 
         MessageDigest messageDigest = null;
         try {
