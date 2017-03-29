@@ -112,13 +112,13 @@ public class Login extends Activity {
 //        }
 
         //enkripsi password input
-        String hashValue = "";
-        try {
-            hashValue = Encoder.encrypt(edPassword.getText().toString());
-            Log.d("New Password", hashValue);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String hashValue = "";
+//        try {
+//            hashValue = Encoder.encrypt(edPassword.getText().toString());
+//            Log.d("New Password", hashValue);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         //ambil password dari DB
         //bandingingin sama nilai hashValue
 
