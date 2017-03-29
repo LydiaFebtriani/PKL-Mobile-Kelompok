@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -147,32 +148,37 @@ public class Rekap extends AppCompatActivity {
             row = new TableRow(this);
 
             no.setText(""+(i+1)+".");
-            //no.setPadding(0,5,25,5);
-            no.setWidth(30);
+            no.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT));
+            no.setPadding(0,5,25,5);
+//            no.setWidth(30);
             no.setTextSize(16);
             row.addView(no);
 
             tgl.setText(tglJual);
-            //tgl.setPadding(0,5,25,5);
-            tgl.setWidth(150);
+            tgl.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT));
+            tgl.setPadding(0,5,15,5);
+//            tgl.setWidth(150);
             tgl.setTextSize(16);
             row.addView(tgl);
 
             info.setText(nama);
-            //info.setPadding(0,5,50,5);
-            info.setWidth(200);
+            info.setPadding(0,5,15,5);
+            info.setWidth(225);
             info.setTextSize(16);
+            info.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             row.addView(info);
 
             qty.setText(kuantitas+" x "+harga);
-            //qty.setPadding(0,5,0,5);
+            qty.setPadding(0,5,15,5);
             qty.setWidth(150);
             qty.setTextSize(16);
+            qty.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             row.addView(qty);
 
             total.setText(hargaTotal+"");
+            total.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT));
             //total.setPadding(20,5,0,5);
-            total.setWidth(120);
+//            total.setWidth(120);
             total.setTextSize(16);
             total.setGravity(Gravity.RIGHT);
             row.addView(total);
