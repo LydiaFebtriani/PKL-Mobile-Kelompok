@@ -46,7 +46,7 @@ public class Rekap extends AppCompatActivity {
         sp=getSharedPreferences("dataProduk",MODE_PRIVATE);
         ed = this.sp.edit();
 
-        sessionId = sp.getString("sessionId","");
+        sessionId = sp.getString("idUser","");
         idUser = Integer.parseInt(sp.getString("idUser",""));
         Connect con = new Connect();
         if(con.checkConnection(this)){
@@ -61,6 +61,7 @@ public class Rekap extends AppCompatActivity {
                     sessionId = sp.getString("sessionId","");
                 }
             }
+            sessionId = sp.getString("sessionId","");
             soap.sync(this,sessionId,idUser);
         }
 //        con.sync(this);
