@@ -118,6 +118,13 @@ public class Soap extends Activity {
                     //Kalau sudah bisa konek, insert
                     String[] pkl = getPklOnline(sessionId[0]);
                     Log.d("Login getPkl",pkl[0]);
+//                    String hashValue = "";
+//                    try {
+//                        hashValue = Encoder.encrypt(password);
+//                        Log.d("Register Password", password);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
                     Long insert = dh.insertUser(pkl[0],pkl[4],pkl[1],pkl[2],pkl[3],pkl[4],pkl[5],true);
                     Log.d("Login insert db",insert+"");
                     //user, nama, alamat, nohp, tgllahir, produkunggulan
@@ -128,9 +135,21 @@ public class Soap extends Activity {
                 }
             }
             else{
-                sessionId[1] = select[0];
-                sessionId[2] = select[1];
-                sessionId[3] = select[2];
+                //enkripsi password input
+//                String hashValue = "";
+//                try {
+//                    hashValue = Encoder.encrypt(password);
+//                    Log.d("Login Password", hashValue);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+                //ambil password dari DB
+                //bandingingin sama nilai hashValue
+//                if(select[2].equals(hashValue)) {
+                    sessionId[1] = select[0];
+                    sessionId[2] = select[1];
+                    sessionId[3] = select[2];
+//                }
             }
         return sessionId;
     }
@@ -193,6 +212,16 @@ public class Soap extends Activity {
         dh = new DataManipulator(context);
         if(dh.select1User(new String[]{"email = \""+email+"\""})[0] == null){
             //Kalau belum ada pkl di lokal
+
+//            //enkripsi password
+//            String hashValue = "";
+//            try {
+//                hashValue = Encoder.encrypt(tgl);
+//                Log.d("Register Password", tgl);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            //simpan nilai hashValue ke DB
             if(dh.insertUser(email,tgl,nama,alamat,noHp,tgl,produkUnggul,sync) == -1){
                 //Jika insert tidak berhasil
                 res = false;
@@ -382,8 +411,7 @@ public class Soap extends Activity {
 
         //BAGIAN DATABASE LOKAL
         dh = new DataManipulator(context);
-        int idProduk = Integer.parseInt(dh.select1FromProduk(new String[]{"idUser = \""+idUser+"\" AND","namaProduk = \""+namaProduk+"\""})[0]);
-        //Jika ada koneksi, langsung insert dengan syncStatus true
+        int idProduk = Integer.parseInt(dh.select1FromProduk(new String[]{"idUser = \""+idUser+"\" AND","namaProduk = \""+namaProduk+"\""})[0]);//Jika ada koneksi, langsung insert dengan syncStatus true
         if(dh.insertTransaksi(idUser, idProduk, Integer.parseInt(qty),hargaJual, tglJual, sync) != -1) res = true;
 
         result = null;
@@ -476,129 +504,7 @@ public class Soap extends Activity {
         return list;
     }
 
-    public void syncData(Context context, String sessionId, int idUser){
-        NetworkHandler handler;
-        int time;
-        List<String[]> list;
 
-        /*BAGIAN REGISTER USER BARU*/
-        list = dh.selectAllUser(new String[]{"syncStatus = \"0\""});
-        for(int i=0;i<list.size();i++){
-            request = new SoapObject(NAMESPACE,"regpkl");
-            request.addProperty("user",list.get(i)[1]);
-            request.addProperty("nama",list.get(i)[3]);
-            request.addProperty("alamat",list.get(i)[4]);
-            request.addProperty("nohp",list.get(i)[5]);
-            request.addProperty("tgllahir",list.get(i)[6]);
-            request.addProperty("produkunggulan",list.get(i)[7]);
-
-            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.setOutputSoapObject(request);
-            handler = new NetworkHandler("regpkl");
-            handler.execute();
-            time = tunggu();
-            if(time<TIMEOUT){
-                dh.update1UserStatus(idUser,true);
-            }
-            result = null;
-        }
-        time = 0;
-
-        /*BAGIAN DATA PRODUK*/
-        //*Bagian memasukkan data produk dari database ke webserver*//
-        list = dh.selectAllProduk(new String[]{"idUser = \""+ (idUser+"") +"\" AND","syncStatus = \"0\""});
-        for(int i=0;i<list.size();i++){
-            request = new SoapObject(NAMESPACE,"regproduk");
-            request.addProperty("sid",sessionId);
-            request.addProperty("namaproduk",list.get(i)[1]);
-            request.addProperty("hargapokok",list.get(i)[2]);
-            request.addProperty("hargajual",list.get(i)[3]);
-
-            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.setOutputSoapObject(request);
-            handler = new NetworkHandler("addproduk");
-            handler.execute();
-            time = tunggu();
-            if(time<TIMEOUT){
-                dh.update1ProdukStatus(Integer.parseInt(list.get(i)[0]),true);
-            }
-            result = null;
-        }
-        //*Bagian memasukkan data produk dari webserver ke database*//
-        list = dh.selectAllProduk(new String[]{"idUser = \""+ (idUser+"") +"\""});
-        //Ambil produk dari webserver
-        String[] katalog = getKatalog(context,sessionId);
-        if(katalog.length > list.size()){
-            for(int i=0;i<katalog.length;i++){
-                //Ambil detail produk dari webserver
-                String[] produk = getDetailProduk(context,sessionId, katalog[i]);
-                boolean isTersedia = false;
-                for(int j=0;j<list.size();j++){
-                    //Loop untuk membandingkan
-                    if(list.get(j)[1].equals(produk[0])){
-                        isTersedia = true;
-                        break;
-                    }
-                }
-
-                if(!isTersedia){
-                    //Produk di webserver tidak ada database
-                    dh.insertProduk(produk[0],produk[1],produk[2],idUser,true);
-                }
-            }
-        }
-        time = 0;
-
-        /*BAGIAN DATA TRANSAKSI*/
-        //*Bagian memasukkan data transaksi dari database ke webserver*//
-        list = dh.selectAllTransaksi(new String[]{"idUser = \""+ (idUser+"") +"\" AND", "syncStatus = \"0\""});
-        for(int i=0;i<list.size();i++){
-            //Ambil data produk di transaksi tersebut
-            String produk = dh.select1NamaProduk(Integer.parseInt(list.get(i)[2]));
-
-            request = new SoapObject(NAMESPACE,"regtransaksi");
-            request.addProperty("sid",sessionId);
-            request.addProperty("namaproduk",produk);
-            request.addProperty("hargajual",list.get(i)[4]);
-            request.addProperty("qtyjual",list.get(i)[3]);
-            request.addProperty("tgljual",list.get(i)[5]);
-
-            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.setOutputSoapObject(request);
-            handler = new NetworkHandler("addtransaksi");
-            handler.execute();
-            time = tunggu();
-            if(time<TIMEOUT){
-                dh.update1TransaksiStatus(Integer.parseInt(list.get(i)[0]),true);
-            }
-            result = null;
-        }
-        //*Bagian memasukkan data transaksi dari webserver ke database*//
-        list = dh.selectAllTransaksi(new String[]{"idUser = \""+ (idUser+"") +"\""});
-        //Ambil transaksi dari webserver
-        ArrayList<String[]> transaksi = getAllRekap(context,sessionId,0);
-        if(transaksi.size() > list.size()){
-            for(int i=0;i<transaksi.size();i++){
-                //Ambil detail produk dari webserver
-                String[] produk = getDetailProduk(context,sessionId, transaksi.get(i)[0]);
-                boolean isTersedia = false;
-                for(int j=0;j<list.size();j++){
-                    //Loop untuk membandingkan
-                    if(list.get(j)[1].equals(produk[0])){
-                        isTersedia = true;
-                        break;
-                    }
-                }
-
-                if(!isTersedia){
-                    String[] dhProduk = dh.select1FromProduk(new String[]{"namaProduk = \""+produk[0]+"\""});
-                    //Transaksi di webserver tidak ada database
-                    dh.insertTransaksi(idUser,Integer.parseInt(dhProduk[0]),Integer.parseInt(transaksi.get(i)[2]),transaksi.get(i)[1],transaksi.get(i)[3],true);
-                }
-            }
-        }
-        time = 0;
-    }
     public void sync(Context context, String sessionId, int idUser){
         dh = new DataManipulator(context);
 
@@ -622,7 +528,7 @@ public class Soap extends Activity {
             //Kalau ada produk baru
             for(int i=0;i<allProduk.size();i++){
                 String[] temp = allProduk.get(i);
-                if(temp[4].equals("false")){
+                if(temp[4].equals("false") || temp[4].equals("0")){
                     setAddProduk(context,sessionId,idUser,temp[1],temp[2],temp[3]);
                     dh.update1ProdukStatus(Integer.parseInt(temp[0]),true);
                     Log.d("Sync Produk",temp[0]+" "+temp[1]+" "+temp[2]+" "+temp[3]);
@@ -633,13 +539,17 @@ public class Soap extends Activity {
         List<String[]> allTransaksi = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\""});
         if(!allTransaksi.isEmpty()){
             //Kalau ada transaksi bar
+            Log.d("Sync Transaksi size",allTransaksi.size()+"");
             for (int i=0;i<allTransaksi.size();i++){
                 String[] temp = allTransaksi.get(i);
-                if(temp[6].equals("false")){
+                Log.d("Sync Transaksi",allTransaksi.get(i)[0]+" "+allTransaksi.get(i)[2]);
+                if(temp[6].equals("false") || temp[6].equals("0")){
                     //idTransaksi, idUser, idProduk, kuantitas, harga, tglJual,syncStatus
                     String namaProduk = dh.select1FromProduk(new String[]{"idProduk = \""+temp[2]+"\""})[1];
                     setAddTransaksi(context,sessionId,idUser,namaProduk,temp[4],temp[3],temp[5]);
                     dh.update1TransaksiStatus(Integer.parseInt(temp[0]),true);
+                    Log.d("Sync Transaksi",namaProduk);
+
                 }
             }
         }
@@ -650,7 +560,6 @@ public class Soap extends Activity {
         allProduk = dh.selectAllProduk(new String[]{"idUser = \""+idUser+"\""});
         if(namaProdukWeb != null && !allProduk.isEmpty()){
             Log.d("Sync produk length",namaProdukWeb.length+" "+allProduk.size());
-            Log.d("Sync produk 2",allProduk.get(1)[0]+" "+allProduk.get(1)[4]);
             int iWeb = 0;
             int iDB = 0;
             while(iWeb < namaProdukWeb.length && iDB < allProduk.size()){
@@ -666,7 +575,7 @@ public class Soap extends Activity {
                 iWeb++;
                 iDB++;
             }
-            if(iWeb != namaProdukWeb.length){
+            if(iWeb < namaProdukWeb.length){
                 while(iWeb < namaProdukWeb.length){
                     String[] detailWeb = getDetailProduk(context,sessionId,namaProdukWeb[iWeb]);
                     dh.insertProduk(detailWeb[0],detailWeb[1],detailWeb[2],idUser,true);
@@ -689,14 +598,14 @@ public class Soap extends Activity {
 
                 Log.d("Sync transaksi web",transaksiWeb[0]+" "+transaksiWeb[1]+" "+transaksiWeb[2]);
                 Log.d("Sync transaksi DB",namaProduk+" "+transaksiDB[4]+" "+transaksiDB[3]+" "+transaksiDB[5]);
-                if(transaksiWeb[0].equals(namaProduk) || transaksiWeb[1].equals(transaksiDB[4]) || transaksiWeb[2].equals(transaksiDB[5])){
+                if(!transaksiWeb[0].equals(namaProduk) || !transaksiWeb[1].equals(transaksiDB[4]) || !transaksiWeb[2].equals(transaksiDB[3]) || !transaksiWeb[3].equals(transaksiDB[5])){
                     dh.update1Transaksi(Integer.parseInt(transaksiDB[0]),idUser,Integer.parseInt(transaksiDB[2]),Integer.parseInt(transaksiDB[3]),transaksiDB[4],transaksiDB[5],true);
                     Log.d("Sync transaksi","Berhasil");
                 }
                 iWeb++;
                 iDB++;
             }
-            if(iWeb != transaksi.size()){
+            if(iWeb < transaksi.size()){
                 while(iWeb < transaksi.size()){
                     String[] transaksiWeb = transaksi.get(iWeb);
                     String idProduk = dh.select1FromProduk(new String[]{"namaProduk = \""+transaksiWeb[0]+"\""})[0];
@@ -706,36 +615,6 @@ public class Soap extends Activity {
                 }
             }
         }
-//
-//        if(namaProdukWeb != null && !allProduk.isEmpty()){
-//            if(namaProdukWeb.length > allProduk.size()){
-//                int idxNext = allProduk.size();
-//                Log.d("Sync Produk Length",namaProdukWeb.length+" "+idxNext);
-//                while(idxNext<namaProdukWeb.length){
-//                    String[] detailProduk = getDetailProduk(context,sessionId,namaProdukWeb[idxNext]);
-//                    Long insert = dh.insertProduk(detailProduk[0],detailProduk[1],detailProduk[2],idUser,true);
-//                    Log.d("Sync Insert Produk",insert+"");
-//                    idxNext++;
-//                }
-//            }
-//        }
-
-
-        /*//Masukin transaksi dari webserver ke database lokal
-        List<String[]> rekapWeb = getAllRekap(context,sessionId,0);
-        //namaproduk","hargajual","qtyjual","tgljual"}
-        List<String[]> rekapDB = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\""});
-        Log.d("Sync rekap size",idUser+" "+rekapDB.size()+" "+rekapWeb.size());
-        if(rekapWeb.size() > rekapDB.size()){
-            int idxNext = rekapDB.size();
-            Log.d("Sync rekap size",rekapDB.size()+" "+rekapWeb.size());
-            while(idxNext<rekapWeb.size()){
-                String[] transaksi = rekapWeb.get(idxNext);
-                String idProduk = dh.select1FromProduk(new String[]{"namaProduk = \""+transaksi[0]+"\""})[0];
-                dh.insertTransaksi(idUser,Integer.parseInt(idProduk),Integer.parseInt(transaksi[2]),transaksi[1],transaksi[3],true);
-                idxNext++;
-            }
-        }*/
     }
 
     /* KELAS HANDLER */
