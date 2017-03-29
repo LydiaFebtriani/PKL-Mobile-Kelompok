@@ -46,12 +46,22 @@ public class Jual extends AppCompatActivity implements View.OnClickListener{
 
         ed = this.sp.edit();
 
-        sessionId = sp.getString("sessionId","");
+        sessionId = sp.getString("idUser","");
         idUser = Integer.parseInt(sp.getString("idUser",""));
         Connect con = new Connect();
         if(con.checkConnection(this)){
             //Ada koneksi
             Soap soap = new Soap();
+            if(sessionId == ""){
+                String[] id = soap.login(this,sp.getString("user",""),sp.getString("password",""));
+                if(id[0] != null){
+                    SharedPreferences.Editor ed = sp.edit();
+                    ed.putString("sessionId", id[0]);
+                    ed.commit();
+                    sessionId = sp.getString("sessionId","");
+                }
+            }
+            sessionId = sp.getString("sessionId","");
             soap.sync(this,sessionId,idUser);
         }
         /*Log.d("Session Katalog",sp.getString("sessionId","").isEmpty()+"");

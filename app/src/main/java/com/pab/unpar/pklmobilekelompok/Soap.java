@@ -28,17 +28,11 @@ public class Soap extends Activity {
     private DataManipulator dh;
 
     String result;
-    int TIMEOUT = 500;
-
-//    private SharedPreferences sp;
-//    private SharedPreferences.Editor se;
+    int TIMEOUT = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        sp = getSharedPreferences("dataProduk", MODE_PRIVATE);
-//        Log.d("SharedPreferences",sp.contains("sessionId")+"");
-//        se = sp.edit();
     }
     /*Output: user, nama, alamat, nohp, tgllahir, produkunggulan*/
     public String[] getPklOnline(String sessionId){
@@ -102,7 +96,7 @@ public class Soap extends Activity {
         int time = tunggu();
         Log.d("After while",result+"");
 
-        sessionId = new String[5];
+        sessionId = new String[4];
 
         dh = new DataManipulator(context);
         if(time<TIMEOUT){
@@ -118,23 +112,26 @@ public class Soap extends Activity {
             String[] select =  dh.select1User(new String[]{"email = \""+username+"\" AND","password = \""+password+"\""});
             Log.d("Login",select[0]+" "+sessionId[0]);
             if(select[0] == null){
-//                sessionId = null;
                 //Kalau tidak ada user di database lokal, register ke lokal
+                //id == null
                 if(sessionId[0] != null){
                     //Kalau sudah bisa konek, insert
                     String[] pkl = getPklOnline(sessionId[0]);
                     Log.d("Login getPkl",pkl[0]);
                     Long insert = dh.insertUser(pkl[0],pkl[4],pkl[1],pkl[2],pkl[3],pkl[4],pkl[5],true);
                     Log.d("Login insert db",insert+"");
+                    //user, nama, alamat, nohp, tgllahir, produkunggulan
+                    String[] infoUserDB = dh.select1User(new String[]{"nama = \""+pkl[0]+"\""});
+                    sessionId[1] = infoUserDB[0];
+                    sessionId[2] = infoUserDB[1];
+                    sessionId[3] = infoUserDB[2];
                 }
-            }else{
-//                String[] select = dh.select1User(new String[]{"email = \""+username+"\" AND","password = \""+password+"\""});
-//                sessionId = new String[3];
+            }
+            else{
                 sessionId[1] = select[0];
                 sessionId[2] = select[1];
                 sessionId[3] = select[2];
             }
-//        }
         return sessionId;
     }
 
@@ -233,31 +230,24 @@ public class Soap extends Activity {
             if(result != "" && result.length()>4){
                 list = result.split(",");
                 Log.d("Katalog",list[0]);
-//                if(list[1].contains("tidak ditemukan")){
-//                    //Kalau sessionId tidak ditemukan atau berupa idUser
-////                    dh = new DataManipulator(context);
-////                    List<String[]> prodName = dh.selectAllProductName(Integer.parseInt(sessionId));
-////                    for(int i=0;i<prodName.size();i++){
-////                        list[i] = prodName.get(i)[1];
-////                    }
-//                }
-//                else{
-                    for(int i=0;i<list.length;i++){
-                        list[i] = list[i].substring(2,list[i].length()-2);
-                        Log.d("Katalog list",list[i]);
-                    }
-//                }
+                for(int i=0;i<list.length;i++){
+                    list[i] = list[i].substring(2,list[i].length()-2);
+                    Log.d("Katalog list",list[i]);
+                }
             }
         }
         else{
             //Kalau tidak ada koneksi langsung ambil dari database lokal
             dh = new DataManipulator(context);
             List<String[]> prodName = dh.selectAllProductName(Integer.parseInt(sessionId));
-            list = new String[prodName.size()];
-            for(int i=0;i<prodName.size();i++){
-                list[i] = prodName.get(i)[1];
+            if(prodName.size() > 0){
+                list = new String[prodName.size()];
+                for(int i=0;i<prodName.size();i++){
+                    list[i] = prodName.get(i)[1];
+                    Log.d("Katalog list",list[i]);
+                }
+                Log.d("Katalog Size",prodName.size()+"");
             }
-            Log.d("Katalog Size",prodName.size()+"");
         }
         result = null;
         return list;
@@ -296,7 +286,12 @@ public class Soap extends Activity {
         else{
             //Kalau tidak ada koneksi, ambil dari database lokal
             dh = new DataManipulator(context);
-            list = dh.select1FromProduk(new String[]{"namaProduk = \""+namaProduk+"\""});
+            list = new String[3];
+            String[] produk = dh.select1FromProduk(new String[]{"idUser = \""+sessionId+"\" AND","namaProduk = \""+namaProduk+"\""});
+            Log.d("Detail Produk",sessionId+" "+namaProduk+" "+produk[1]);
+            list[0] = produk[1];
+            list[1] = produk[2];
+            list[2] = produk[3];
         }
         result = null;
         return list;
@@ -305,6 +300,7 @@ public class Soap extends Activity {
     //******************** METHOD UNTUK MENAMBAH DAN MENGUPDATE PRODUK ********************//
     /* OUTPUT: true=berhasil */
     public boolean setAddProduk(Context context, String sessionId, int idUser, String namaProduk, String hargaPokok, String hargaJual){
+        boolean res = false;
         String[] list=null;
 
         request = new SoapObject(NAMESPACE, "regproduk");
@@ -319,6 +315,7 @@ public class Soap extends Activity {
         handler.execute();
         int time = tunggu();
 
+        boolean sync = false;
         if(time<TIMEOUT){
             if(result!=null){
                 result = result.substring(1,result.length()-1);
@@ -326,29 +323,36 @@ public class Soap extends Activity {
                 list[1] = list[1].substring(1,list[1].length()-1);
                 System.out.println(list[1]);
                 if(list[1].equalsIgnoreCase("diregistrasi")){
-                    return true;
+                    res = true;
                 }
+                sync = true;
             }
         }
-//        else{
+
+        //BAGIAN DATABASE LOKAL
         dh = new DataManipulator(context);
-        String[] produk = dh.select1FromProduk(new String[]{"namaProduk = \""+namaProduk+"\""});
+        String[] produk = dh.select1FromProduk(new String[]{"idUser = \""+idUser+"\" AND", "namaProduk = \""+namaProduk+"\""});
+        Log.d("Tambah produk",produk[0]+"");
         if(produk[0] == null){
             //Kalau tidak ada produk, insert
-            if(dh.insertProduk(namaProduk,hargaPokok,hargaJual,idUser,false) != -1) return true;
+            if(dh.insertProduk(namaProduk,hargaPokok,hargaJual,idUser,sync) != -1){
+                res = true;
+                Log.d("Insert produk ke DB",res+"");
+            }
         } else{
             //Kalau produk sudah ada, update
-            dh.update1Produk(Integer.parseInt(produk[0]),namaProduk,hargaPokok,hargaJual,idUser,true);
-            return true;
+            dh.update1Produk(Integer.parseInt(produk[0]),namaProduk,hargaPokok,hargaJual,idUser,sync);
+            Log.d("Update produk ke DB", "Berhasil "+produk[0]+" "+produk[1]+" "+idUser+" "+sync);
+            res = true;
         }
-//        }
         result = null;
-        return false;
+        return res;
     }
 
     //******************** METHOD UNTUK MENAMBAH TRANSAKSI ********************//
     /* OUTPUT: true=berhasil */
     public boolean setAddTransaksi(Context context, String sessionId, int idUser, String namaProduk, String hargaJual, String qty, String tglJual){
+        boolean res = false;
         String[] list=null;
 
         request = new SoapObject(NAMESPACE, "regtransaksi");
@@ -364,22 +368,26 @@ public class Soap extends Activity {
         handler.execute();
         int time = tunggu();
 
+        boolean sync = false;
         if(time<TIMEOUT){
             if(result!=null){
                 result = result.substring(1,result.length()-1);
                 list = result.split(",");
                 if(list[1].substring(1,list[1].length()-1).equalsIgnoreCase("ditambahkan")){
-                    return true;
+                    res = true;
                 }
+                sync = true;
             }
         }
-//        else{
-            dh = new DataManipulator(context);
-            int idProduk = Integer.parseInt(dh.select1FromProduk(new String[]{"idUser = \""+idUser+"\" AND","namaProduk = \""+namaProduk+"\""})[0]);
-            if(dh.insertTransaksi(idUser, idProduk, Integer.parseInt(qty),hargaJual, tglJual, false) != -1) return true;
-//        }
+
+        //BAGIAN DATABASE LOKAL
+        dh = new DataManipulator(context);
+        int idProduk = Integer.parseInt(dh.select1FromProduk(new String[]{"idUser = \""+idUser+"\" AND","namaProduk = \""+namaProduk+"\""})[0]);
+        //Jika ada koneksi, langsung insert dengan syncStatus true
+        if(dh.insertTransaksi(idUser, idProduk, Integer.parseInt(qty),hargaJual, tglJual, sync) != -1) res = true;
+
         result = null;
-        return false;
+        return res;
     }
 
     //******************** METHOD UNTUK MENDAPATKAN REKAP TRANSAKSI ********************//
@@ -408,7 +416,6 @@ public class Soap extends Activity {
                 int idx =0 ;
                 int ct =0;
                 for(int i=0;i<temp.length;i++){
-                    //temp[i] = temp[i].substring(1,temp[i].length()-1);
                     if(i%4 == 0){
                         temp[i] = temp[i].substring(1);
                     } else if((i+1)%4 == 0){
@@ -579,10 +586,9 @@ public class Soap extends Activity {
         time = 0;
     }
     public void sync(Context context, String sessionId, int idUser){
-//        syncDariWeb(context,sessionId,idUser);
-//        syncDariDB(context,sessionId,idUser);
         dh = new DataManipulator(context);
 
+        /* SYNC DARI DATABASE LOKAL KE WEBSERVER */
         //Search user baru / syncStatus == 0
         List<String[]> allUser = dh.selectAllUser(new String[]{"syncStatus = \""+0+"\""});
         Log.d("Sync Register",allUser.isEmpty()+"");
@@ -591,46 +597,105 @@ public class Soap extends Activity {
             for(int i=0;i<allUser.size();i++){
                 String[] temp = allUser.get(i);
                 register(context,temp[1],temp[3],temp[4],temp[5],temp[6],temp[7]);
+                dh.update1UserStatus(Integer.parseInt(temp[0]),true);
                 Log.d("Sync Register",temp[0]+" "+temp[1]);
             }
         }
-
         //Search produk baru / syncStatus == 0
-        List<String[]> allProduk = dh.selectAllProduk(new String[]{"idUser = \""+idUser+"\" AND", "syncStatus = \""+0+"\""});
+        List<String[]> allProduk = dh.selectAllProduk(new String[]{"idUser = \""+idUser+"\""});
+        Log.d("Sync produk",idUser+" "+allProduk.isEmpty());
         if(!allProduk.isEmpty()){
             //Kalau ada produk baru
             for(int i=0;i<allProduk.size();i++){
                 String[] temp = allProduk.get(i);
-                setAddProduk(context,sessionId,idUser,temp[1],temp[2],temp[3]);
+                if(temp[4].equals("false")){
+                    setAddProduk(context,sessionId,idUser,temp[1],temp[2],temp[3]);
+                    dh.update1ProdukStatus(Integer.parseInt(temp[0]),true);
+                    Log.d("Sync Produk",temp[0]+" "+temp[1]+" "+temp[2]+" "+temp[3]);
+                }
             }
         }
-
         //Search transaksi baru / syncStatus == 0
-        List<String[]> allTransaksi = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\" AND", "syncStatus = \""+0+"\""});
+        List<String[]> allTransaksi = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\""});
         if(!allTransaksi.isEmpty()){
             //Kalau ada transaksi bar
             for (int i=0;i<allTransaksi.size();i++){
                 String[] temp = allTransaksi.get(i);
-                //idTransaksi, idUser, idProduk, kuantitas, harga, tglJual,syncStatus
-                String namaProduk = dh.select1FromProduk(new String[]{"idProduk = \""+temp[2]+"\""})[1];
-                setAddTransaksi(context,sessionId,idUser,namaProduk,temp[4],temp[3],temp[5]);
+                if(temp[6].equals("false")){
+                    //idTransaksi, idUser, idProduk, kuantitas, harga, tglJual,syncStatus
+                    String namaProduk = dh.select1FromProduk(new String[]{"idProduk = \""+temp[2]+"\""})[1];
+                    setAddTransaksi(context,sessionId,idUser,namaProduk,temp[4],temp[3],temp[5]);
+                    dh.update1TransaksiStatus(Integer.parseInt(temp[0]),true);
+                }
             }
         }
 
-        //Masukin produk dari webserver ke database lokal
+        /* SYNC DARI WEBSERVER KE DATABASE LOKAL */
+        //Masukin produk
         String[] namaProdukWeb = getKatalog(context,sessionId);
-        //Ambil semua produk dari lokal
         allProduk = dh.selectAllProduk(new String[]{"idUser = \""+idUser+"\""});
-        if(namaProdukWeb.length > allProduk.size()){
-            int idxNext = allProduk.size();
-            Log.d("Sync Produk Length",namaProdukWeb.length+" "+idxNext);
-            while(idxNext<namaProdukWeb.length){
-                String[] detailProduk = getDetailProduk(context,sessionId,namaProdukWeb[idxNext]);
-                Long insert = dh.insertProduk(detailProduk[0],detailProduk[1],detailProduk[2],idUser,true);
-                Log.d("Sync Insert Produk",insert+"");
-                idxNext++;
+        if(namaProdukWeb != null && !allProduk.isEmpty()){
+            Log.d("Sync produk length",namaProdukWeb.length+" "+allProduk.size());
+            Log.d("Sync produk 2",allProduk.get(1)[0]+" "+allProduk.get(1)[4]);
+            int iWeb = 0;
+            int iDB = 0;
+            while(iWeb < namaProdukWeb.length && iDB < allProduk.size()){
+                String[] detailWeb = getDetailProduk(context,sessionId,namaProdukWeb[iWeb]);
+                String[] detailDB = allProduk.get(iDB);
+                if(!detailWeb[0].equals(detailDB[1]) || !detailWeb[1].equals(detailDB[2]) || !detailWeb[2].equals(detailDB[3])){
+                    //Nama, harga pokok, harga jual ada yang tidak sama
+                    dh.update1Produk(Integer.parseInt(detailDB[0]),detailWeb[0],detailWeb[1],detailWeb[2],idUser,true);
+                }
+                iWeb++;
+                iDB++;
+            }
+            if(iWeb != namaProdukWeb.length){
+                while(iWeb < namaProdukWeb.length){
+                    String[] detailWeb = getDetailProduk(context,sessionId,namaProdukWeb[iWeb]);
+                    dh.insertProduk(detailWeb[0],detailWeb[1],detailWeb[2],idUser,true);
+                    iWeb++;
+                }
             }
         }
+        //Masukin transaksi
+        ArrayList<String[]> transaksi = getAllRekap(context,sessionId,0);
+        allTransaksi = dh.selectAllTransaksi(new String[]{"idUser = \""+idUser+"\""});
+        if(!transaksi.isEmpty() && !allTransaksi.isEmpty()){
+            int iWeb = 0;
+            int iDB = 0;
+            while(iWeb < transaksi.size() && iDB < allTransaksi.size()){
+                String[] transaksiWeb = transaksi.get(iWeb);
+                String[] transaksiDB = allTransaksi.get(iDB);
+                String namaProduk = dh.select1FromProduk(new String[]{"idProduk = \""+transaksiDB[2]+"\""})[1];
+                if(transaksiWeb[0].equals(namaProduk) || transaksiWeb[1].equals(transaksiDB[4]) || transaksiWeb[2].equals(transaksiDB[5])){
+                    dh.update1Transaksi(Integer.parseInt(transaksiDB[0]),idUser,Integer.parseInt(transaksiDB[2]),Integer.parseInt(transaksiDB[3]),transaksiDB[4],transaksiDB[5],true);
+                }
+                iWeb++;
+                iDB++;
+            }
+            if(iWeb != transaksi.size()){
+                while(iWeb < transaksi.size()){
+                    String[] transaksiWeb = transaksi.get(iWeb);
+                    String idProduk = dh.select1FromProduk(new String[]{"namaProduk = \""+transaksiWeb[0]+"\""})[0];
+                    dh.insertTransaksi(idUser,Integer.parseInt(idProduk),Integer.parseInt(transaksiWeb[2]),transaksiWeb[1],transaksiWeb[3],true);
+                    iWeb++;
+                }
+            }
+        }
+//
+//        if(namaProdukWeb != null && !allProduk.isEmpty()){
+//            if(namaProdukWeb.length > allProduk.size()){
+//                int idxNext = allProduk.size();
+//                Log.d("Sync Produk Length",namaProdukWeb.length+" "+idxNext);
+//                while(idxNext<namaProdukWeb.length){
+//                    String[] detailProduk = getDetailProduk(context,sessionId,namaProdukWeb[idxNext]);
+//                    Long insert = dh.insertProduk(detailProduk[0],detailProduk[1],detailProduk[2],idUser,true);
+//                    Log.d("Sync Insert Produk",insert+"");
+//                    idxNext++;
+//                }
+//            }
+//        }
+
 
         /*//Masukin transaksi dari webserver ke database lokal
         List<String[]> rekapWeb = getAllRekap(context,sessionId,0);

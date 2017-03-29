@@ -149,11 +149,13 @@ public class DataManipulator {
 //                },
 //                null,null,null,null,"idProduk asc");
         String str = makeConditionString(condition);
+        Log.d("Produk condition",str);
         Cursor cursor = db.rawQuery("SELECT idProduk, namaProduk, hargaPokok, hargaJual,syncStatus FROM "+PRODUCT_TABLE+" WHERE "+str, null);
         int x=0;
         if(cursor.moveToFirst()){
             do{
                 String[] b1 = new String[]{cursor.getString(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4)};
+                Log.d("Select All Product",b1[0]+" "+b1[1]+" "+b1[3]+" "+b1[4]);
                 list.add(b1);
 
                 x=x+1;
@@ -230,8 +232,8 @@ public class DataManipulator {
     }
     /* UPDATE 1 RECORD FROM PRODUCT TABLE */
     public void update1Produk(int idProduk,String namaProduk,String hargaPokok,String hargaJual,int idUser, boolean syncStatus){
-        Cursor cursor = db.rawQuery("UPDATE "+PRODUCT_TABLE+" SET namaProduk=?, hargaPokok=?, hargaJual=?, syncStatus=? WHERE idProduk=? AND idUser=?",new String[]{namaProduk,hargaPokok,hargaJual,syncStatus+"",idProduk+"",idUser+""});
-        cursor.moveToFirst();
+        Cursor cursor = db.rawQuery("UPDATE "+PRODUCT_TABLE+" SET namaProduk=\""+namaProduk+"\", hargaPokok=\""+hargaPokok+"\", hargaJual=\""+hargaJual+"\", syncStatus=\""+syncStatus+"\" WHERE idProduk=\""+idProduk+"\" AND idUser=\""+idUser+"\"",null);
+        if(cursor.moveToFirst()) Log.d("Update DB","Berhasil");
         cursor.close();
     }
 

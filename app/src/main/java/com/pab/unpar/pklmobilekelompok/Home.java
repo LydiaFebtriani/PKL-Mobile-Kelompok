@@ -38,6 +38,13 @@ public class Home extends AppCompatActivity {
         Connect con = new Connect();
         if(con.checkConnection(this)){
             Soap soap = new Soap();
+            if(sp.getString("sessionId","") == ""){
+                String[] id = soap.login(this,sp.getString("user",""),sp.getString("password",""));
+                if(id[0] != null){
+                    ed.putString("sessionId", id[0]);
+                    ed.commit();
+                }
+            }
             soap.sync(this,sp.getString("sessionId",""),Integer.parseInt(sp.getString("idUser","")));
         }
         /*String sessionId = null;

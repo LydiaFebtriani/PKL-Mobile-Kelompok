@@ -39,6 +39,15 @@ public class Tambah extends AppCompatActivity implements View.OnClickListener{
         if(con.checkConnection(this)){
             //Ada koneksi
             Soap soap = new Soap();
+            if(sessionId == ""){
+                String[] id = soap.login(this,sp.getString("user",""),sp.getString("password",""));
+                if(id[0] != null){
+                    SharedPreferences.Editor ed = sp.edit();
+                    ed.putString("sessionId", id[0]);
+                    ed.commit();
+                    sessionId = sp.getString("sessionId","");
+                }
+            }
             soap.sync(this,sessionId,idUser);
         }
 //        con.sync(this);

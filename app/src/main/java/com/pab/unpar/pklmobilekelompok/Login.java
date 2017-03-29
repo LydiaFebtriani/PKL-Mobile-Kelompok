@@ -85,14 +85,12 @@ public class Login extends Activity {
             if (id[0] != null) {
                 //Ada sessionId
                 ed.putString("sessionId", id[0]);
-                ed.putString("user", email);
                 ed.commit();
                 Log.d("Login with connection", id[0]+" "+id[1]+" "+id[2]+" "+id[3]);
                 res = true;
             } else{
                 //Kalau offline
                 ed.putString("sessionId", "");
-                ed.putString("user", email);
                 ed.commit();
                 Log.d("Login no connection", id[0]+" "+id[1]+" "+id[2]+" "+id[3]);
             }
